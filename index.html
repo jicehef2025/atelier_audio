@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier d'écoute · fréquences audibles - JC FOUCHE 2026 - www.savoirnumerique.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow+Semi+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Charte LABO JC Fouché : thème sombre, titres Barlow Condensed, chiffres IBM Plex Mono.
+   3 blocs sources sur une même ligne d'horizon, reliés par des flèches roses, puis le monitoring. */
+:root{
+  --bg:#0c0e10; --bay:#121518; --bay-2:#181c20; --bay-3:#1e2328; --rule:#262c32; --rule-2:#333a42;
+  --fg:#e6e9ec; --muted:#8e979f; --dim:#5f6870; --ico:#d4d9de;
+  --amber:#e8b84a; --amber-ink:#1b1404; --phos:#86e0a2; --warn:#f0a35e; --bad:#ef6b6b; --blue:#5b95f0; --pink:#ec3a8c;
+  --f-disp:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
+  --f-ui:'Barlow Semi Condensed','Barlow','Arial Narrow',system-ui,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--f-ui);font-size:15px;line-height:1.4;padding:0 16px 32px;margin:0}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--f-disp);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:0;text-wrap:balance}
+h1{font-size:1.55rem} h1 span{color:var(--amber)}
+h2{font-size:1.02rem} h3{font-size:.86rem;color:var(--muted)}
+h3.sh{color:var(--amber);font-size:.8rem;margin:2px 0 6px}
+button,select,input{font:inherit;color:var(--fg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--bay-2);border:1px solid var(--rule-2);border-radius:6px;padding:6px 11px;cursor:pointer;white-space:nowrap;font-size:.92rem}
+.btn:hover{border-color:var(--muted)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sm{padding:3px 8px;font-size:.82rem}
+.btn.pri{width:100%;padding:9px 12px;font-family:var(--f-disp);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:1rem}
+.btn.on{background:var(--amber);color:var(--amber-ink);border-color:var(--amber)}
+.btn.alert{border-color:var(--pink);color:#f6a9cc}
+.btn.alert.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+.btn:focus-visible,select:focus-visible,input:focus-visible,.seg button:focus-visible,.chips button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+select{max-width:100%;background:var(--bay-2);border:1px solid var(--rule-2);border-radius:6px;padding:4px 6px;min-width:0;font-size:.86rem}
+input[type=range]{accent-color:var(--amber);width:100%;min-width:0;margin:2px 0}
+input[type=checkbox]{accent-color:var(--amber)}
+input[type=number]{background:var(--bay-2);border:1px solid var(--rule-2);border-radius:6px;padding:5px 8px;width:100%;min-width:0;font-family:var(--f-mono);text-align:center;font-size:.95rem}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)} .dim{color:var(--dim)}
+.seg{display:flex;border:1px solid var(--rule-2);border-radius:6px;overflow:hidden;width:100%}
+.seg button{flex:1 1 0;background:var(--bay-2);border:0;border-right:1px solid var(--rule-2);padding:5px 3px;cursor:pointer;font-size:.8rem;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--amber);color:var(--amber-ink);font-weight:600}
+.seg.inv button[aria-pressed=true]{background:var(--phos);color:#0b1a10}
+.ck{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.82rem;cursor:pointer;white-space:nowrap}
+
+/* En-tête */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-block:16px 12px;border-bottom:1px solid var(--rule)}
+.trow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.brand .sub{color:var(--muted);margin:2px 0 0;font-size:.92rem}
+.scen{display:flex;flex-wrap:wrap;gap:8px}
+.engine{display:grid;grid-template-columns:minmax(300px,380px) minmax(200px,280px) minmax(0,1fr);gap:10px 18px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
+.engine .note{margin:0}
+@media (max-width:900px){.engine{grid-template-columns:minmax(0,1fr)}}
+
+/* Ligne de workflow */
+.flow{--gap:46px;--col:330px;display:grid;grid-template-columns:repeat(3,minmax(var(--col),1fr));column-gap:var(--gap);position:relative;padding-top:6px;margin-top:6px}
+.flow::before{content:'';position:absolute;left:0;right:0;top:calc(6px + 88px + 117px);height:2px;background:linear-gradient(90deg,transparent,var(--rule-2) 3%,var(--rule-2) 97%,transparent)}
+.blk{display:flex;flex-direction:column;min-width:0;position:relative}
+.kw{height:88px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;font-family:var(--f-disp);font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.98rem;line-height:1.13}
+.ico{position:relative;height:128px}
+.ico svg{display:block;width:100%;height:100%}
+.chev{position:absolute;top:44px;right:calc(-1 * var(--gap));width:var(--gap);height:28px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.chev svg{width:44px;height:24px}
+.sname{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:6px}
+.sname b{font-family:var(--f-disp);font-weight:600;font-size:1.25rem;letter-spacing:.05em;text-transform:uppercase;line-height:1}
+.sname b i,.bay-head h2 i{font-style:normal;color:var(--amber);margin-right:6px}
+.pill{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--pink);color:#f6a9cc;border-radius:999px;padding:2px 9px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.card{flex:1 1 auto;margin-top:10px;background:var(--bay);border:1px solid var(--rule);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.inst svg{display:block;width:100%;height:auto}
+.inst svg text{font-family:var(--f-mono)}
+.inst svg .tu{font-family:var(--f-ui)}
+.inst svg .td{font-family:var(--f-disp);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.field{display:flex;flex-direction:column;gap:2px;min-width:0}
+.field>span{display:flex;justify-content:space-between;gap:6px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.field>span b{font-family:var(--f-mono);font-weight:500;letter-spacing:0;text-transform:none;color:var(--fg);font-size:.8rem}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 8px}
+.r3{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;align-items:center}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chips button{background:var(--bay-2);border:1px solid var(--rule-2);border-radius:999px;padding:1px 8px;font-size:.74rem;cursor:pointer;color:var(--muted)}
+.chips button:hover{color:var(--fg);border-color:var(--muted)}
+.chips button[aria-pressed=true]{color:var(--amber-ink);background:var(--amber);border-color:var(--amber)}
+.grp{border:1px solid var(--rule);border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:6px;background:#0f1214}
+.grp h3{color:var(--fg);font-size:.8rem}
+.read{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.82rem;color:var(--muted);border-top:1px dashed var(--rule-2);padding-top:6px}
+.read+.read{border-top:0;padding-top:0}
+.read b{font-family:var(--f-mono);font-weight:500;color:var(--fg);font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note{font-size:.78rem;line-height:1.35;border-radius:6px;padding:6px 8px;border:1px solid var(--rule-2);background:var(--bay-2);color:var(--muted)}
+.note.err{border-color:#6b2e2e;color:#f3b3b3;background:#1b1112}
+.note.ok{border-color:#2f5a3c;color:#bfe8cb;background:#101a13}
+.note.wa{border-color:#6b4e2a;color:#f5cf9f;background:#1a1510}
+.note p{margin:0} .note p+p{margin-top:4px}
+/* Afficheur de fréquence */
+.disp{background:#060708;border:1px solid var(--rule-2);border-radius:6px;padding:12px 8px 9px;text-align:center}
+.big{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:2.35rem;font-weight:500;color:var(--amber);line-height:1;letter-spacing:-.01em}
+.big small{font-size:.5em;color:var(--muted);margin-left:4px}
+.bigsub{margin-top:6px;color:var(--muted);font-size:.8rem}
+.bigsub b{color:var(--phos);font-weight:600}
+.tres{display:flex;flex-direction:column;gap:2px;font-size:.8rem;color:var(--muted)}
+.tres b{font-family:var(--f-mono);color:var(--amber);font-weight:500}
+/* Écrans */
+.screen{position:relative;background:#000;border-radius:4px;overflow:hidden;border:1px solid var(--rule-2)}
+.screen canvas,.scope canvas{display:block;width:100%;height:auto}
+.scope{background:#060708;border:1px solid var(--rule-2);border-radius:4px;overflow:hidden;position:relative}
+.mlab{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;font-family:var(--f-mono);font-size:.68rem;color:var(--muted);margin-top:5px}
+.mlab i{font-style:normal;display:inline-block;width:10px;height:3px;vertical-align:middle;margin-right:4px}
+.live{background:#060708;border:1px solid var(--rule-2);border-radius:6px;padding:10px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center}
+.live .lv{font-family:var(--f-mono);font-size:1.7rem;color:var(--amber);line-height:1}
+.live .lv small{font-size:.5em;color:var(--muted)}
+.live .ls{font-size:.78rem;color:var(--muted);text-align:right}
+.live .ls b{color:var(--fg);font-family:var(--f-disp);letter-spacing:.06em;text-transform:uppercase;font-size:.9rem}
+.live .lu{grid-column:1/-1;font-family:var(--f-mono);font-size:.66rem;color:var(--dim);overflow-wrap:anywhere}
+.dotlive{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dim);margin-right:6px;vertical-align:middle}
+.dotlive.on{background:var(--bad);box-shadow:0 0 8px var(--bad)}
+/* Formules */
+.fx{margin-top:auto;background:var(--bay-2);border:1px solid var(--rule);border-left:3px solid var(--amber);border-radius:6px;padding:8px 9px;font-size:.8rem;line-height:1.45;color:var(--muted)}
+.fx h3{color:var(--amber);font-size:.78rem;margin-bottom:4px}
+.fx .eq{display:block;font-family:var(--f-mono);font-size:.76rem;color:var(--fg);margin:2px 0 3px;overflow-wrap:anywhere}
+.fx .eq i{font-style:italic;font-family:Georgia,'Times New Roman',serif;font-size:.86rem}
+.fx .ex{display:block;font-family:var(--f-mono);font-size:.74rem;color:var(--phos);margin-top:4px;overflow-wrap:anywhere}
+.fx sup,.fx sub{font-size:.68em}
+.fx b{color:var(--fg)}
+/* Monitoring */
+.bay{margin-top:18px;background:var(--bay);border:1px solid var(--rule);border-radius:8px;padding:12px;min-width:0}
+.bay-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:10px}
+.bay-head h2{margin-right:auto;font-size:1.25rem}
+.bay-head .mi{width:64px;height:40px}
+.bay-head .mi svg{width:100%;height:100%}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 12px;align-items:end;margin-bottom:10px}
+.ctl .acts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.mgrid{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:12px}
+.mgrid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.side{display:flex;flex-direction:column;gap:6px;min-width:0}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.mhead .seg{width:auto;flex:1 1 220px;max-width:420px}
+.bay.blind canvas,.bay.blind .side .read b,.bay.blind .side .rd{filter:blur(12px)}
+.blindmsg{display:none}
+.bay.blind .blindmsg{display:block}
+.bay:fullscreen{overflow:auto;padding:18px;background:var(--bg)}
+@media (max-width:1000px){.mgrid,.mgrid2{grid-template-columns:minmax(0,1fr)}}
+.notes{color:var(--muted);font-size:.86rem;max-width:120ch;margin-top:16px}
+.notes h3{margin-bottom:6px;color:var(--amber)}
+.notes p{margin:0 0 8px}
+.notes b{color:var(--fg)}
+@media (max-width:1100px){
+  .flow{grid-template-columns:minmax(0,1fr);row-gap:30px}
+  .flow::before,.chev{display:none}
+  .kw{height:auto;margin-bottom:6px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head><body>
+
+<header class="top">
+  <div class="brand">
+    <div class="trow"><h1>Atelier d'écoute · de la vibration à l'oreille <span>- JC FOUCHE 2026 - www.savoirnumerique.com</span></h1><button class="btn sm" id="pageFS" type="button" aria-pressed="false">⛶ Plein écran</button></div>
+    <p class="sub">Oscillateur → échantillons → bits → codec → carte son → haut-parleur → oreille · zone audible humaine : 20 Hz – 20 kHz</p>
+  </div>
+  <div class="scen">
+    <button class="btn" id="dmHigh" type="button" title="Balayage de 8 kHz vers le haut : cliquez quand vous n'entendez plus">Démo · limite des aigus</button>
+    <button class="btn" id="dmAlias" type="button" title="Balayage 20 Hz → 20 kHz échantillonné à 8 kHz sans filtre">Démo · repliement</button>
+    <button class="btn" id="dmBits" type="button" title="Musique quantifiée sur 4 bits">Démo · 4 bits</button>
+    <button class="btn" id="dmFip" type="button" title="FIP en direct au débit le plus bas">Démo · FIP 32 kb/s</button>
+    <button class="btn alert" id="stopAll" type="button">■ Tout arrêter</button>
+  </div>
+</header>
+
+<div class="engine">
+  <label class="field"><span>Moteur audio · fréquence d'échantillonnage <b id="engV"></b></span>
+    <select id="rateS" aria-label="Fréquence du moteur audio">
+      <option value="auto">Auto (celle de votre sortie)</option><option value="44100">44 100 Hz</option><option value="48000">48 000 Hz</option><option value="96000">96 000 Hz</option><option value="192000">192 000 Hz</option>
+    </select></label>
+  <label class="field"><span>Volume général <b id="mstV"></b></span><input type="range" id="mstR" min="-40" max="0" step="1" aria-label="Volume général"></label>
+  <div class="note wa"><b>Protégez vos oreilles :</b> baissez le volume de l'ordinateur avant de lancer un son, surtout au casque. Les sons purs aigus et forts sont fatigants et peuvent abîmer les tweeters. Le monitoring mesure le signal numérique, avant ce volume.</div>
+</div>
+
+<div class="flow">
+
+  <!-- 01 GÉNÉRATEUR -->
+  <article class="blk">
+    <div class="kw">Oscillateur · 0 à 30 000 Hz<br>Période · longueur d'onde<br>Limites de l'audition</div>
+    <div class="ico" id="ic1"></div>
+    <div class="sname"><b><i>01</i>Générateur</b><span class="pill" id="o1"></span></div>
+    <div class="card">
+      <div class="disp"><div class="big" id="gF"></div><div class="bigsub" id="gSub"></div></div>
+      <button class="btn pri" id="gPlay" type="button">▶ Émettre la fréquence</button>
+      <label class="field"><span>Fréquence · curseur logarithmique <b id="gFV"></b></span><input type="range" id="gR" min="0" max="1000" step="1" aria-label="Fréquence"></label>
+      <div class="r3">
+        <button class="btn" id="gDn" type="button" aria-label="Descendre d'un pas">◀ −</button>
+        <input type="number" id="gN" min="0" max="30000" step="0.1" aria-label="Fréquence exacte en hertz">
+        <button class="btn" id="gUp" type="button" aria-label="Monter d'un pas">+ ▶</button>
+      </div>
+      <div class="field"><span>Pas des boutons − / +</span>
+        <div class="seg" data-k="step"><button type="button" data-v="1">1 Hz</button><button type="button" data-v="10">10 Hz</button><button type="button" data-v="100">100 Hz</button><button type="button" data-v="1000">1 kHz</button><button type="button" data-v="st">½ ton</button><button type="button" data-v="tier">⅓ oct</button><button type="button" data-v="oct">Octave</button></div></div>
+      <div class="field"><span>Fréquences repères</span>
+        <div class="chips" data-k="f" data-num="1" id="gChips"></div></div>
+      <div class="field"><span>Forme d'onde</span>
+        <div class="seg inv" data-k="wave"><button type="button" data-v="sine">Sinus</button><button type="button" data-v="square">Carré</button><button type="button" data-v="triangle">Triangle</button><button type="button" data-v="sawtooth">Dents de scie</button></div></div>
+      <label class="field"><span>Niveau de sortie <b id="gLV"></b></span><input type="range" id="gL" min="-60" max="0" step="1" aria-label="Niveau du générateur"></label>
+      <div><h3 class="sh">Position dans le spectre</h3><div class="inst" id="gScale"></div></div>
+      <div class="note" id="gNote"></div>
+      <div class="grp">
+        <h3>Test d'audition · balayage</h3>
+        <div class="g2"><button class="btn" id="tHi" type="button">Test des aigus ↗</button><button class="btn" id="tLo" type="button">Test des graves ↘</button></div>
+        <button class="btn pri" id="tStop" type="button" disabled>Je n'entends plus !</button>
+        <div class="tres" id="tRes"><span class="dim">Lancez un test, puis cliquez au moment où le son disparaît.</span></div>
+      </div>
+      <div class="fx" id="fx1"></div>
+    </div>
+  </article>
+
+  <!-- 02 NUMÉRISATION -->
+  <article class="blk">
+    <div class="kw">Échantillonnage · quantification<br>Nyquist · repliement · bits<br>Analogique → numérique</div>
+    <div class="ico" id="ic2"></div>
+    <div class="sname"><b><i>02</i>Numérisation</b><span class="pill" id="o2"></span></div>
+    <div class="card">
+      <div class="field"><span>Son de référence</span>
+        <div class="seg" data-k="dsrc"><button type="button" data-v="music">Musique</button><button type="button" data-v="sine">Sinus 1 kHz</button><button type="button" data-v="steps">6 sons purs</button><button type="button" data-v="sweep">Balayage</button><button type="button" data-v="file">Votre fichier</button></div></div>
+      <div class="row"><button class="btn sm" id="dFileB" type="button">Choisir un fichier audio…</button><input type="file" id="dFile" accept="audio/*,.wav,.flac,.mp3,.aac,.m4a,.ogg" hidden><span class="muted mono" id="dFileN" style="font-size:.74rem"></span></div>
+      <button class="btn pri" id="dPlay" type="button">▶ Écouter le son numérisé</button>
+      <label class="field"><span>Niveau avant numérisation <b id="dInV"></b></span><input type="range" id="dIn" min="-48" max="0" step="1" aria-label="Niveau avant numérisation"></label>
+      <div class="grp">
+        <h3>Quantification · nombre de bits</h3>
+        <label class="field"><span>Résolution <b id="dBV"></b></span><input type="range" id="dB" min="4" max="24" step="1" aria-label="Nombre de bits"></label>
+        <div class="chips" data-k="bits" data-num="1"><button type="button" data-v="4">4</button><button type="button" data-v="6">6</button><button type="button" data-v="8">8</button><button type="button" data-v="12">12</button><button type="button" data-v="16">16 · CD</button><button type="button" data-v="20">20</button><button type="button" data-v="24">24 · studio</button></div>
+        <label class="ck"><input type="checkbox" id="dDit"> Dither TPDF (bruit de dispersion ±1 pas)</label>
+        <div class="read"><span>Nombre de niveaux</span><b id="dLev"></b></div>
+        <div class="read"><span>Dynamique théorique (sinus)</span><b id="dSnr"></b></div>
+        <div class="read"><span>Pas de quantification (1 LSB)</span><b id="dLsb"></b></div>
+      </div>
+      <div class="grp">
+        <h3>Échantillonnage · fréquence fe</h3>
+        <label class="field"><span>Fréquence d'échantillonnage <b id="dFV"></b></span><input type="range" id="dF" min="0" max="1000" step="1" aria-label="Fréquence d'échantillonnage"></label>
+        <div class="chips" data-k="fs" data-num="1" id="dFsC"></div>
+        <label class="ck"><input type="checkbox" id="dAA"> Filtre anti-repliement (avant échantillonnage)</label>
+        <label class="ck"><input type="checkbox" id="dRec"> Filtre de lissage (reconstruction, après)</label>
+        <div class="read"><span>Fréquence de Nyquist (fe / 2)</span><b id="dNyq"></b></div>
+        <div class="read"><span>Débit PCM stéréo</span><b id="dRate"></b></div>
+        <div class="read"><span>Une minute de son</span><b id="dMin"></b></div>
+        <div class="read" id="dSwR" hidden><span id="dSwL">Balayage : émis → restitué</span><b id="dSw"></b></div>
+      </div>
+      <div><h3 class="sh">Échantillons, nuances et niveaux · 2 ms de signal test</h3>
+        <div class="screen"><canvas id="dViz" width="760" height="330" aria-label="Échantillonnage et quantification d'un signal test"></canvas></div>
+        <div class="mlab"><span><i style="background:#8e979f"></i>signal analogique</span><span><i style="background:#86e0a2"></i>après filtre</span><span><i style="background:#e8b84a"></i>échantillons quantifiés</span><span><i style="background:#ec3a8c"></i>sortie reconstruite</span><span><i style="background:linear-gradient(90deg,#282828,#fff)"></i>nuances (2^n)</span></div>
+      </div>
+      <div class="note" id="dNote"></div>
+      <div class="fx" id="fx2"></div>
+    </div>
+  </article>
+
+  <!-- 03 FIP -->
+  <article class="blk">
+    <div class="kw">Radio en direct · Radio France<br>MP3 · AAC · débit en kb/s<br>Compression perceptive</div>
+    <div class="ico" id="ic3"></div>
+    <div class="sname"><b><i>03</i>Radio FIP</b><span class="pill" id="o3"></span></div>
+    <div class="card">
+      <label class="field"><span>Station</span><select id="fSt" aria-label="Station FIP"></select></label>
+      <div class="field"><span>Qualité du flux · de la moins bonne à la meilleure</span>
+        <div class="seg" data-k="fq" data-num="1" id="fQ"></div></div>
+      <button class="btn pri" id="fPlay" type="button">▶ Écouter FIP en direct</button>
+      <label class="field"><span>Volume FIP <b id="fVV"></b></span><input type="range" id="fV" min="-30" max="6" step="1" aria-label="Volume FIP"></label>
+      <div class="live">
+        <div class="lv" id="fLv"></div>
+        <div class="ls" id="fLs"></div>
+        <div class="lu" id="fUrl"></div>
+      </div>
+      <div>
+        <div class="read"><span>État du flux</span><b id="fState"></b></div>
+        <div class="read"><span>Temps de démarrage</span><b id="fT"></b></div>
+        <div class="read"><span>Compression par rapport au CD</span><b id="fRatio"></b></div>
+        <div class="read"><span>Données pour une heure d'écoute</span><b id="fMo"></b></div>
+        <div class="read"><span>Contenu mesuré jusqu'à</span><b id="fCut"></b></div>
+      </div>
+      <div><h3 class="sh">Débit comparé au CD audio</h3><div class="inst" id="fBars"></div></div>
+      <div class="grp">
+        <h3>Quiz · quelle qualité écoutez-vous ?</h3>
+        <button class="btn" id="qGo" type="button">Écoute à l'aveugle</button>
+        <div class="chips" id="qAns" hidden></div>
+        <div class="tres" id="qMsg"><span class="dim">Le monitoring est flouté pendant le quiz : fiez-vous à vos oreilles.</span></div>
+      </div>
+      <div class="note" id="fNote"></div>
+      <div class="fx" id="fx3"></div>
+    </div>
+  </article>
+
+</div>
+
+<!-- 04 MONITORING -->
+<section class="bay" id="monBay" aria-labelledby="hM">
+  <div class="bay-head">
+    <div class="mi" id="ic4" aria-hidden="true"></div>
+    <h2 id="hM"><i>04</i>Monitoring · fréquence, amplitude, spectre</h2>
+    <span class="pill" id="o4"></span>
+    <button class="btn sm" id="monFS" type="button">⛶ Plein écran</button>
+  </div>
+  <div class="ctl">
+    <div class="field"><span>Analyse</span><div class="seg inv" data-k="view"><button type="button" data-v="fft">FFT fine</button><button type="button" data-v="oct">⅓ d'octave</button></div></div>
+    <div class="field"><span>Résolution FFT</span><div class="seg" data-k="fft" data-num="1"><button type="button" data-v="2048">2k</button><button type="button" data-v="4096">4k</button><button type="button" data-v="8192">8k</button><button type="button" data-v="16384">16k</button><button type="button" data-v="32768">32k</button></div></div>
+    <div class="field"><span>Moyennage</span><div class="seg" data-k="avg"><button type="button" data-v="fast">Rapide</button><button type="button" data-v="mid">Moyen</button><button type="button" data-v="slow">Lent</button></div></div>
+    <div class="field"><span>Axe des fréquences</span><div class="seg" data-k="xs"><button type="button" data-v="log">Log</button><button type="button" data-v="lin">Linéaire</button></div></div>
+    <div class="field"><span>Étendue</span><div class="seg" data-k="xr"><button type="button" data-v="20k">20 Hz – 20 kHz</button><button type="button" data-v="nyq">Jusqu'à fe/2</button></div></div>
+    <div class="field"><span>Dynamique affichée</span><div class="seg" data-k="dbr" data-num="1"><button type="button" data-v="100">100 dB</button><button type="button" data-v="140">140 dB</button><button type="button" data-v="180">180 dB</button></div></div>
+    <div class="acts"><label class="ck"><input type="checkbox" id="mHold"> Maintien des crêtes</label><button class="btn sm" id="mFreeze" type="button">❚❚ Figer</button><button class="btn sm" id="mReset" type="button">RAZ sonie</button><button class="btn sm" id="mSave" type="button" title="Enregistre tous les scopes et mesures dans une page web">⤓ Enregistrer la page</button></div>
+  <div class="note" id="mSaveN" hidden></div>
+  </div>
+  <div class="note wa blindmsg">Quiz en cours : le monitoring est masqué. Répondez dans le bloc 03 pour le révéler.</div>
+  <div class="mgrid">
+    <div><div class="scope"><canvas id="spec" width="1200" height="440" aria-label="Analyseur de spectre"></canvas></div></div>
+    <div class="side">
+      <div class="scope"><canvas id="meters" width="480" height="560" aria-label="Crêtemètres et sonie"></canvas></div>
+      <div class="read"><span>Fréquence dominante</span><b id="mFreq"></b></div>
+      <div class="read"><span>Niveau de ce pic</span><b id="mPk"></b></div>
+      <div class="read"><span>Contenu spectral jusqu'à</span><b id="mCut"></b></div>
+      <div class="read"><span>SINAD · bits effectifs</span><b id="mSin"></b></div>
+      <div class="read"><span>Crête G / D (dBFS)</span><b id="mPkLR"></b></div>
+      <div class="read"><span>RMS G / D (dBFS)</span><b id="mRms"></b></div>
+      <div class="read"><span>Facteur de crête</span><b id="mCrest"></b></div>
+      <div class="read"><span>Sonie M / S (LUFS)</span><b id="mMS"></b></div>
+      <div class="read"><span>Sonie intégrée · max M</span><b id="mI"></b></div>
+      <div class="read"><span>Corrélation de phase G/D</span><b id="mCorr"></b></div>
+    </div>
+  </div>
+  <div class="mgrid2">
+    <div><div class="mhead"><h3 class="sh" style="margin:0">Spectrogramme · 20 dernières secondes</h3></div><div class="scope"><canvas id="sgram" width="1200" height="320" aria-label="Spectrogramme"></canvas></div></div>
+    <div><div class="mhead"><h3 class="sh" style="margin:0">Oscilloscope · déclenché</h3>
+      <div class="seg inv" data-k="tb"><button type="button" data-v="auto">Auto</button><button type="button" data-v="1">1 ms</button><button type="button" data-v="5">5 ms</button><button type="button" data-v="20">20 ms</button><button type="button" data-v="100">100 ms</button></div></div>
+      <div class="scope"><canvas id="osc" width="1200" height="320" aria-label="Oscilloscope"></canvas></div></div>
+  </div>
+</section>
+
+<section class="notes">
+  <h3>Pistes pédagogiques</h3>
+  <p><b>1 · Où s'arrête votre oreille ?</b> Lancez le test des aigus : la plupart des étudiants n'entendent plus au-delà de 16 à 19 kHz, alors que l'analyseur montre toujours le signal. Comparez entre vous : la limite baisse avec l'âge et l'exposition au bruit.</p>
+  <p><b>2 · Les graves et le haut-parleur.</b> Descendez à 60 Hz, puis 30 Hz : l'analyseur voit un pic net, mais les haut-parleurs d'un ordinateur portable ne le restituent pas. Passez en signal carré : les harmoniques impaires (3f, 5f, 7f…) apparaissent et rendent le son audible.</p>
+  <p><b>3 · Le repliement.</b> Balayage 20 Hz → 20 kHz, fe = 8 kHz, filtre anti-repliement coupé : passé 4 kHz, le son redescend au lieu de monter. Réactivez le filtre : tout ce qui dépasse fe/2 disparaît proprement.</p>
+  <p><b>4 · Les bits, c'est la dynamique.</b> Sinus 1 kHz à −30 dB sur 8 bits : des raies de distorsion apparaissent. Activez le dither : elles se fondent dans un bruit régulier. Le SINAD mesuré suit la règle 6,02 × n + 1,76 dB, puis plafonne quand le niveau est bas.</p>
+  <p><b>5 · La musique sur 4, 8, 16 bits.</b> Écoutez surtout la fin du morceau (piano qui s'éteint) : c'est dans les passages calmes que le bruit de quantification se remarque d'abord.</p>
+  <p><b>6 · Le débit de la radio.</b> FIP en MP3 32 kb/s, puis AAC 192 kb/s : sur le spectrogramme, la coupure des aigus remonte nettement. Faites ensuite le quiz à l'aveugle.</p>
+  <p><b>7 · Au-delà de 20 kHz.</b> Passez le moteur à 96 ou 192 kHz : le générateur peut produire 30 kHz et l'analyseur le montre, mais personne ne l'entend. La sortie réelle dépend de votre carte son et du réglage du système.</p>
+  <p class="dim" style="font-size:.78rem">Hypothèses : toutes les mesures portent sur le signal numérique envoyé à la carte son, pas sur le son acoustique dans la salle. 0 dBFS = sinus pleine échelle (valeur crête) ; le RMS est donné sans la correction AES17 de +3 dB. Spectre : FFT maison, fenêtre Blackman-Harris 4 termes, analyse du mélange (G + D) / 2, fréquence du pic interpolée. Sonie : UIT-R BS.1770 (pondération K, M 400 ms, S 3 s, intégrée avec portes −70 LUFS et −10 LU), sans crête vraie. Numérisation simulée dans le moteur audio : filtres de Butterworth d'ordre 8 à 0,454 × fe, blocage d'ordre zéro, quantification par arrondi avec écrêtage, dither TPDF. Au-delà de la fréquence du moteur, la simulation est transparente. Flux FIP : serveurs icecast.radiofrance.fr, débits nominaux annoncés.</p>
+</section>
+
+<script>
+'use strict';
+/* ===================== outils ===================== */
+const $ = s => document.querySelector(s);
+const clamp = (v, a, b) => v < a ? a : (v > b ? b : v);
+const fr = (n, d = 0) => Number.isFinite(n) ? n.toLocaleString('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−') : '—';
+const dbg = d => Math.pow(10, d / 20);
+const l2d = v => v > 0 ? 20 * Math.log10(v) : -Infinity;
+const dbt = (v, d = 1) => Number.isFinite(v) && v > -150 ? fr(v, d) : '−∞';
+function hz(f) { if (!Number.isFinite(f)) return '—'; if (f >= 1000) return fr(f / 1000, f >= 10000 ? 2 : 3) + ' kHz'; return fr(f, f < 10 ? 2 : (f < 100 ? 1 : 0)) + ' Hz'; }
+const hzx = f => fr(f, (f < 1000 && Math.abs(f - Math.round(f)) > 0.04) ? 1 : 0) + ' Hz';
+const NOTES = ['Do', 'Do♯', 'Ré', 'Ré♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si'];
+const NOTE_EN = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+const mf = m => 440 * Math.pow(2, (m - 69) / 12);
+
+/* ===================== état ===================== */
+const QUAL = [
+  { file: 'lofi.mp3', codec: 'MP3', kbps: 32, n: 'MP3 32' },
+  { file: 'midfi.aac', codec: 'AAC', kbps: 96, n: 'AAC 96' },
+  { file: 'midfi.mp3', codec: 'MP3', kbps: 128, n: 'MP3 128' },
+  { file: 'hifi.aac', codec: 'AAC', kbps: 192, n: 'AAC 192' },
+];
+const STATIONS = [['fip', 'FIP · antenne principale'], ['fiprock', 'FIP Rock'], ['fipjazz', 'FIP Jazz'], ['fipgroove', 'FIP Groove'], ['fipworld', 'FIP Monde'], ['fipnouveautes', 'FIP Nouveautés'], ['fipreggae', 'FIP Reggae'], ['fipelectro', 'FIP Electro']];
+const FSL = [8000, 11025, 16000, 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000];
+const GCHIPS = [0, 20, 50, 100, 440, 1000, 4000, 10000, 15000, 17000, 20000, 25000, 30000];
+const CD_KBPS = 1411.2;
+const DEF = { f: 1000, wave: 'sine', lvl: -20, step: '100',
+  dsrc: 'music', bits: 16, fs: 44100, aa: true, rec: true, dither: false, inLvl: 0,
+  fst: 'fip', fq: 3, fvol: 0,
+  view: 'fft', fft: 16384, avg: 'mid', xs: 'log', xr: 'nyq', dbr: 140, tb: 'auto', hold: true,
+  rate: 'auto', master: -6 };
+const S = Object.assign({}, DEF);
+const ST = { gen: false, dig: false, fip: false };
+
+/* ===================== DSP partagé (worklet ou repli ScriptProcessor) ===================== */
+const CORE_SRC = `
+class DegCore {
+  constructor() { this.r = 1; this.bits = 24; this.dither = false; this.ph = [1, 1]; this.h = [0, 0]; }
+  set(o) { for (const k in o) this[k] = o[k]; }
+  process(inp, out) {
+    if (!out || !out.length) return;
+    if (!inp || !inp.length) { for (const o of out) o.fill(0); return; }
+    const q = Math.pow(2, this.bits - 1), top = (q - 1) / q, r = this.r, dit = this.dither, n = out[0].length;
+    for (let c = 0; c < out.length; c++) {
+      const x = inp[Math.min(c, inp.length - 1)], y = out[c];
+      let ph = this.ph[c] || 0, h = this.h[c] || 0;
+      for (let k = 0; k < n; k++) {
+        ph += r;
+        if (ph >= 1) {
+          ph -= 1;
+          let v = x[k];
+          if (dit) v += (Math.random() - Math.random()) / q;
+          v = Math.round(v * q) / q;
+          h = v > top ? top : (v < -1 ? -1 : v);
+        }
+        y[k] = h;
+      }
+      this.ph[c] = ph; this.h[c] = h;
+    }
+  }
+}
+class MeterCore {
+  constructor(sr, post) { this.sr = sr; this.post = post; this.blk = Math.round(sr / 10); this.kc = MeterCore.kw(sr); this.z = [new Float64Array(8), new Float64Array(8)]; this.reset(); this.clr(); }
+  static kw(fs) {
+    let f0 = 1681.974450955533, G = 3.999843853973347, Q = 0.7071752369554196;
+    let K = Math.tan(Math.PI * f0 / fs), Vh = Math.pow(10, G / 20), Vb = Math.pow(Vh, 0.4996667741545416), a0 = 1 + K / Q + K * K;
+    const s1 = [(Vh + Vb * K / Q + K * K) / a0, 2 * (K * K - Vh) / a0, (Vh - Vb * K / Q + K * K) / a0, 2 * (K * K - 1) / a0, (1 - K / Q + K * K) / a0];
+    f0 = 38.13547087602444; Q = 0.5003270373238773; K = Math.tan(Math.PI * f0 / fs);
+    const d = 1 + K / Q + K * K, s2 = [1, -2, 1, 2 * (K * K - 1) / d, (1 - K / Q + K * K) / d];
+    return [s1, s2];
+  }
+  clr() { this.n = 0; this.pk = [0, 0]; this.ss = [0, 0]; this.ks = 0; this.lr = 0; }
+  reset() { this.hist = []; this.gate = []; this.mmax = -Infinity; }
+  cmd(o) { if (o && o.reset) this.reset(); }
+  process(inp) {
+    const L = inp[0], R = inp[1] || inp[0], n = L.length, s1 = this.kc[0], s2 = this.kc[1];
+    for (let c = 0; c < 2; c++) {
+      const x = c ? R : L, z = this.z[c];
+      let pk = this.pk[c], ss = this.ss[c], ks = 0;
+      for (let k = 0; k < n; k++) {
+        const v = x[k], a = v < 0 ? -v : v;
+        if (a > pk) pk = a;
+        ss += v * v;
+        const y1 = s1[0] * v + s1[1] * z[0] + s1[2] * z[1] - s1[3] * z[2] - s1[4] * z[3];
+        z[1] = z[0]; z[0] = v; z[3] = z[2]; z[2] = y1;
+        const y2 = y1 - 2 * z[4] + z[5] - s2[3] * z[6] - s2[4] * z[7];
+        z[5] = z[4]; z[4] = y1; z[7] = z[6]; z[6] = y2;
+        ks += y2 * y2;
+      }
+      this.pk[c] = pk; this.ss[c] = ss; this.ks += ks;
+    }
+    let lr = 0; for (let k = 0; k < n; k++) lr += L[k] * R[k];
+    this.lr += lr; this.n += n;
+    if (this.n >= this.blk) this.flush();
+  }
+  flush() {
+    const n = this.n, e = this.ks / n, h = this.hist, lu = x => x > 0 ? -0.691 + 10 * Math.log10(x) : -Infinity;
+    h.push(e); if (h.length > 30) h.shift();
+    let M = -Infinity, Sv = -Infinity, I = -Infinity;
+    if (h.length >= 4) {
+      const eM = (h[h.length - 1] + h[h.length - 2] + h[h.length - 3] + h[h.length - 4]) / 4;
+      M = lu(eM);
+      this.gate.push(eM); if (this.gate.length > 36000) this.gate.shift();
+      if (M > this.mmax) this.mmax = M;
+    }
+    if (h.length >= 30) { let s = 0; for (const v of h) s += v; Sv = lu(s / h.length); }
+    const ab = Math.pow(10, (-70 + 0.691) / 10);
+    let s = 0, c = 0;
+    for (const v of this.gate) if (v > ab) { s += v; c++; }
+    if (c) {
+      const rel = (s / c) * 0.1; let s2 = 0, c2 = 0;
+      for (const v of this.gate) if (v > ab && v > rel) { s2 += v; c2++; }
+      if (c2) I = lu(s2 / c2);
+    }
+    const d = Math.sqrt(this.ss[0] * this.ss[1]);
+    this.post({ pk: [this.pk[0], this.pk[1]], rms: [Math.sqrt(this.ss[0] / n), Math.sqrt(this.ss[1] / n)], M: M, S: Sv, I: I, mx: this.mmax, corr: d > 1e-12 ? this.lr / d : null });
+    this.clr();
+  }
+}`;
+const WK_SRC = CORE_SRC + `
+const Z128 = new Float32Array(128);
+class DegP extends AudioWorkletProcessor { constructor() { super(); this.c = new DegCore(); this.port.onmessage = e => this.c.set(e.data); } process(i, o) { this.c.process(i[0], o[0]); return true; } }
+registerProcessor('deg', DegP);
+class MeterP extends AudioWorkletProcessor { constructor() { super(); this.c = new MeterCore(sampleRate, d => this.port.postMessage(d)); this.port.onmessage = e => this.c.cmd(e.data); }
+  process(i, o) { const x = i[0]; this.c.process(x && x.length ? x : [Z128]); return true; } }
+registerProcessor('meter', MeterP);`;
+
+/* ===================== moteur audio ===================== */
+const A = { ctx: null, native: null, ready: false, wk: false, cores: null };
+const BQ = [0.5098, 0.6013, 0.9, 2.5629];   /* Butterworth ordre 8 = 4 cellules */
+async function buildAudio() {
+  A.ready = false;
+  stopAll(true);
+  if (A.ctx) { try { await A.ctx.close(); } catch (e) { } A.ctx = null; }
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) { $('#engV').textContent = 'Web Audio indisponible'; return; }
+  const want = S.rate === 'auto' ? null : +S.rate;
+  let ctx;
+  try { ctx = want ? new AC({ sampleRate: want, latencyHint: 'interactive' }) : new AC({ latencyHint: 'interactive' }); }
+  catch (e) { ctx = new AC(); A.rateRefused = want; }
+  if (!want && !A.native) A.native = ctx.sampleRate;
+  A.ctx = ctx;
+  const mk = () => ctx.createGain();
+  A.mix = mk(); A.mix.channelCount = 2; A.mix.channelCountMode = 'explicit';
+  A.master = mk(); A.master.gain.value = dbg(S.master);
+  A.mix.connect(A.master); A.master.connect(ctx.destination);
+  A.an = ctx.createAnalyser(); A.an.fftSize = 32768; A.an.smoothingTimeConstant = 0; A.mix.connect(A.an);
+  A.genBus = mk(); A.genBus.connect(A.mix);
+  A.fipBus = mk(); A.fipBus.gain.value = dbg(S.fvol); A.fipBus.connect(A.mix);
+  A.digIn = mk(); A.digOut = mk(); A.digOut.connect(A.mix);
+  const filt = () => BQ.map(q => { const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = q; return f; });
+  A.aa = filt(); A.rc = filt();
+  /* processeurs : AudioWorklet si possible, sinon ScriptProcessor */
+  A.wk = false;
+  if (ctx.audioWorklet) {
+    try { const u = URL.createObjectURL(new Blob([WK_SRC], { type: 'application/javascript' })); await ctx.audioWorklet.addModule(u); A.wk = true; }
+    catch (e) { try { await ctx.audioWorklet.addModule('data:application/javascript;charset=utf-8,' + encodeURIComponent(WK_SRC)); A.wk = true; } catch (e2) { } }
+  }
+  const sink = mk(); sink.gain.value = 0; sink.connect(ctx.destination);
+  if (A.wk) {
+    const dn = new AudioWorkletNode(ctx, 'deg', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [2] });
+    A.deg = { node: dn, set: o => dn.port.postMessage(o) };
+    const mn = new AudioWorkletNode(ctx, 'meter', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [1] });
+    mn.port.onmessage = e => onMeter(e.data); A.meterCmd = o => mn.port.postMessage(o);
+    A.mix.connect(mn); mn.connect(sink);
+  } else {
+    const C = A.cores || (A.cores = new Function(CORE_SRC + ';return {DegCore:DegCore,MeterCore:MeterCore};')());
+    const dc = new C.DegCore(), dn = ctx.createScriptProcessor(1024, 2, 2);
+    dn.onaudioprocess = e => { const i = e.inputBuffer, o = e.outputBuffer; dc.process([i.getChannelData(0), i.getChannelData(1)], [o.getChannelData(0), o.getChannelData(1)]); };
+    A.deg = { node: dn, set: o => dc.set(o) };
+    const mc = new C.MeterCore(ctx.sampleRate, onMeter), mn = ctx.createScriptProcessor(2048, 2, 1);
+    mn.onaudioprocess = e => { const i = e.inputBuffer; mc.process([i.getChannelData(0), i.getChannelData(1)]); };
+    A.meterCmd = o => mc.cmd(o); A.mix.connect(mn); mn.connect(sink);
+  }
+  let n = A.digIn; for (const f of A.aa) { n.connect(f); n = f; }
+  n.connect(A.deg.node); n = A.deg.node; for (const f of A.rc) { n.connect(f); n = f; }
+  n.connect(A.digOut);
+  digApply();
+  MT.reset();
+  M.key = ''; M.pAvg = null;
+  A.ready = true;
+  uiAll();
+}
+async function ensureAudio() {
+  if (!A.ready) await buildAudio();
+  if (!A.ctx) return false;
+  if (A.ctx.state !== 'running') { try { await A.ctx.resume(); } catch (e) { } }
+  return true;
+}
+const nyq = () => (A.ctx ? A.ctx.sampleRate : (A.native || 48000)) / 2;
+const sr = () => A.ctx ? A.ctx.sampleRate : (A.native || 48000);
+function solo(k) { if (k !== 'gen') genStop(); if (k !== 'dig') digStop(); if (k !== 'fip') fipStop(); }
+function stopAll(silent) { genStop(); digStop(); fipStop(); if (!silent) uiAll(); }
+
+/* ===================== 01 générateur ===================== */
+const G = { osc: null, g: null, sweep: null, res: [] };
+async function genStart() {
+  if (!await ensureAudio()) return false;
+  solo('gen');
+  if (G.osc) return true;
+  const c = A.ctx;
+  G.g = c.createGain(); G.g.gain.value = 0; G.g.connect(A.genBus);
+  G.osc = c.createOscillator(); G.osc.type = S.wave; G.osc.frequency.value = Math.min(S.f, nyq() * 0.999);
+  G.osc.connect(G.g); G.osc.start();
+  ST.gen = true; genLevel(); uiGen();
+  return true;
+}
+function genStop() {
+  if (!G.osc) return;
+  G.sweep = null;
+  const t = A.ctx.currentTime, o = G.osc, g = G.g;
+  g.gain.cancelScheduledValues(t); g.gain.setTargetAtTime(0, t, 0.012);
+  o.stop(t + 0.1); o.onended = () => { o.disconnect(); g.disconnect(); };
+  G.osc = null; G.g = null; ST.gen = false; uiGen();
+}
+function genLevel() {
+  if (!G.g) return;
+  const v = (S.f > 0 && S.f < nyq()) ? dbg(S.lvl) : 0;
+  G.g.gain.setTargetAtTime(v, A.ctx.currentTime, 0.015);
+}
+function genApply() {
+  if (!G.osc) return;
+  const t = A.ctx.currentTime;
+  if (!G.sweep) { G.osc.frequency.cancelScheduledValues(t); G.osc.frequency.setTargetAtTime(Math.max(0, Math.min(S.f, nyq() * 0.999)), t, 0.008); }
+  G.osc.type = S.wave;
+  genLevel();
+}
+function setF(f) {
+  if (G.sweep) stopSweep(false);
+  S.f = clamp(Math.round(f * 10) / 10, 0, 30000);
+  genApply(); uiGen();
+}
+function stepF(dir) {
+  const st = S.step; let f = S.f;
+  if (/^\d+$/.test(st)) f += dir * +st;
+  else {
+    const r = st === 'st' ? Math.pow(2, 1 / 12) : st === 'tier' ? Math.pow(2, 1 / 3) : 2;
+    if (f <= 0) f = dir > 0 ? 20 : 0; else f = dir > 0 ? f * r : f / r;
+    if (dir < 0 && f < 1) f = 0;
+  }
+  setF(f);
+}
+async function startSweep(dir) {
+  if (!await genStart()) return;
+  const t = A.ctx.currentTime, f0 = dir > 0 ? 8000 : 250, f1 = dir > 0 ? Math.min(22000, nyq() * 0.98) : 12, dur = dir > 0 ? 40 : 30;
+  S.wave = 'sine'; G.osc.type = 'sine';
+  G.osc.frequency.cancelScheduledValues(t); G.osc.frequency.setValueAtTime(f0, t); G.osc.frequency.exponentialRampToValueAtTime(f1, t + dur);
+  G.sweep = { t0: t, f0, f1, dur, dir }; S.f = f0; genLevel(); uiGen();
+}
+const sweepU = () => clamp((A.ctx.currentTime - G.sweep.t0) / G.sweep.dur, 0, 1);
+const sweepF = () => G.sweep.f0 * Math.pow(G.sweep.f1 / G.sweep.f0, sweepU());
+function stopSweep(record, end) {
+  if (!G.sweep) return;
+  const f = sweepF(), d = G.sweep.dir;
+  if (record) {
+    G.res.unshift({ d, f, end: !!end });
+    G.res = G.res.slice(0, 6);
+  }
+  G.sweep = null; S.f = Math.round(f);
+  if (G.osc) { const t = A.ctx.currentTime; G.osc.frequency.cancelScheduledValues(t); G.osc.frequency.setValueAtTime(S.f, t); }
+  if (record && !end) genStop();
+  uiGen();
+}
+function bandName(f) {
+  if (f <= 0) return 'Aucune vibration';
+  if (f < 20) return 'Infrason';
+  if (f < 60) return 'Extrême grave';
+  if (f < 250) return 'Grave';
+  if (f < 500) return 'Bas médium';
+  if (f < 2000) return 'Médium';
+  if (f < 4000) return 'Haut médium';
+  if (f < 6000) return 'Présence';
+  if (f <= 20000) return 'Aigu · brillance';
+  return 'Ultrason';
+}
+function noteOf(f) {
+  if (f < 8) return null;
+  const n = 69 + 12 * Math.log2(f / 440), m = Math.round(n), c = Math.round((n - m) * 100);
+  return { fr: NOTES[(m % 12 + 12) % 12] + ' ' + (Math.floor(m / 12) - 2), en: NOTE_EN[(m % 12 + 12) % 12] + (Math.floor(m / 12) - 1), c };
+}
+function perT(f) { if (f <= 0) return '∞'; const T = 1 / f; return T >= 1 ? fr(T, 2) + ' s' : T >= 1e-3 ? fr(T * 1e3, T >= 0.01 ? 1 : 3) + ' ms' : fr(T * 1e6, 1) + ' µs'; }
+function lam(f) { if (f <= 0) return '∞'; const l = 343 / f; return l >= 1 ? fr(l, 2) + ' m' : l >= 0.01 ? fr(l * 100, 1) + ' cm' : fr(l * 1000, 1) + ' mm'; }
+const gPos = f => f < 1 ? 0 : Math.round(Math.log(f) / Math.log(30000) * 1000);
+const gFreq = p => p <= 0 ? 0 : Math.pow(30000, p / 1000);
+function scaleSVG() {
+  const W = 340, H = 138, X0 = 8, X1 = 332, lx = f => X0 + (f <= 1 ? 0 : Math.log(f) / Math.log(30000)) * (X1 - X0);
+  let g = `<rect x="${X0}" y="4" width="${lx(20) - X0}" height="${H - 24}" fill="rgba(167,124,240,.16)"/>
+  <rect x="${lx(20)}" y="4" width="${lx(20000) - lx(20)}" height="${H - 24}" fill="rgba(134,224,162,.10)"/>
+  <rect x="${lx(20000)}" y="4" width="${X1 - lx(20000)}" height="${H - 24}" fill="rgba(236,58,140,.16)"/>
+  <text x="${(X0 + lx(20)) / 2}" y="16" text-anchor="middle" fill="#a77cf0" class="td" style="font-size:9px">Infra</text>
+  <text x="${(lx(20) + lx(20000)) / 2}" y="16" text-anchor="middle" fill="#86e0a2" class="td" style="font-size:10px">Zone audible · 20 Hz – 20 kHz</text>
+  <text x="${(lx(20000) + X1) / 2}" y="16" text-anchor="middle" fill="#ec3a8c" class="td" style="font-size:9px">Ultra</text>`;
+  const refs = [['Voix (fondamentale)', 85, 255, '#e8b84a'], ['Piano', 27.5, 4186, '#5b95f0'], ['Téléphone', 300, 3400, '#f0a35e'], ['Radio FM', 30, 15000, '#45c2b0'], ['CD audio', 20, 20000, '#e2e4ea']];
+  refs.forEach(([n, a, b, c], i) => {
+    const y = 28 + i * 16;
+    g += `<rect x="${lx(a)}" y="${y}" width="${lx(b) - lx(a)}" height="5" rx="2" fill="${c}" opacity=".75"/><text x="${lx(b) + 4 > 250 ? lx(a) - 4 : lx(b) + 4}" y="${y + 5.5}" text-anchor="${lx(b) + 4 > 250 ? 'end' : 'start'}" fill="${c}" class="tu" style="font-size:9.5px">${n}</text>`;
+  });
+  for (const [f, t] of [[1, '1'], [10, '10'], [100, '100'], [1000, '1 k'], [10000, '10 k'], [30000, '30 k']]) {
+    g += `<line x1="${lx(f)}" y1="${H - 20}" x2="${lx(f)}" y2="${H - 15}" stroke="#5f6870"/><text x="${clamp(lx(f), 10, 326)}" y="${H - 5}" text-anchor="middle" fill="#8e979f" style="font-size:9px">${t}</text>`;
+  }
+  g += `<text x="${X1}" y="${H - 5}" text-anchor="end" fill="#5f6870" style="font-size:8px"></text>`;
+  const nq = nyq();
+  if (nq < 30000) g += `<line x1="${lx(nq)}" y1="4" x2="${lx(nq)}" y2="${H - 20}" stroke="#ec3a8c" stroke-dasharray="3 3"/><text x="${lx(nq) - 3}" y="${H - 24}" text-anchor="end" fill="#f6a9cc" style="font-size:8.5px">fe/2</text>`;
+  const x = lx(S.f);
+  g += `<line x1="${x}" y1="4" x2="${x}" y2="${H - 18}" stroke="#e8b84a" stroke-width="2"/><path d="M${x - 5} ${H - 15} L${x + 5} ${H - 15} L${x} ${H - 21} Z" fill="#e8b84a"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Position de la fréquence sur l'échelle des sons" style="background:#0a0c0e;border-radius:4px">${g}</svg>`;
+}
+function uiGen() {
+  const f = S.f, nt = noteOf(f), nq = nyq(), sw = !!G.sweep;
+  $('#gF').innerHTML = fr(f, f < 100 && f % 1 ? 1 : 0) + '<small>Hz</small>';
+  $('#gSub').innerHTML = `<b>${bandName(f)}</b>${nt ? ` · ${nt.fr} (${nt.en}) ${nt.c ? (nt.c > 0 ? '+' : '−') + Math.abs(nt.c) + ' cents' : ''}` : ''} · λ = ${lam(f)}`;
+  $('#gFV').textContent = hzx(f);
+  if (document.activeElement !== $('#gR')) $('#gR').value = gPos(f);
+  if (document.activeElement !== $('#gN')) $('#gN').value = Math.round(f * 10) / 10;
+  $('#gLV').textContent = S.lvl + ' dBFS';
+  $('#gScale').innerHTML = scaleSVG();
+  const b = $('#gPlay'); b.classList.toggle('on', ST.gen); b.textContent = ST.gen ? '■ Arrêter le générateur' : '▶ Émettre la fréquence';
+  let cls = 'note', t;
+  if (f <= 0) t = '0 Hz : aucune vibration, donc aucun son. Un signal constant (courant continu) ne fait pas vibrer l\'air : la sortie est coupée.';
+  else if (f >= nq) { cls = 'note err'; t = `Impossible ici : le moteur audio tourne à ${fr(sr())} Hz, il ne peut produire que jusqu'à fe/2 = ${fr(nq)} Hz (théorème de Nyquist-Shannon). Sortie coupée. Passez le moteur à 96 ou 192 kHz si votre carte son le permet.`; }
+  else if (f > 20000) { cls = 'note wa'; t = 'Ultrason : inaudible pour l\'oreille humaine. Il est bien dans le signal (voir l\'analyseur), mais beaucoup de cartes son et de haut-parleurs ne le restituent pas.'; }
+  else if (f > 15000) { cls = 'note wa'; t = 'Très haut aigu : la limite de l\'audition baisse avec l\'âge, souvent vers 15 à 17 kHz chez l\'adulte. Si vous n\'entendez rien, l\'analyseur prouve que le son est bien émis.'; }
+  else if (f < 20) { cls = 'note wa'; t = 'Infrason : il ne s\'entend pas, il se ressent parfois comme une vibration. Les haut-parleurs d\'ordinateur ne le reproduisent pas.'; }
+  else if (f < 150) t = 'Grave : les petits haut-parleurs (ordinateur portable, téléphone) descendent rarement sous 100 à 200 Hz. L\'analyseur voit le signal, vous ne l\'entendez peut-être pas : essayez un casque ou passez en signal carré.';
+  else { cls = 'note ok'; t = 'Zone audible : la sensibilité de l\'oreille est maximale entre 2 et 5 kHz (courbes d\'égale sonie).'; }
+  if (S.wave !== 'sine' && f > 0 && f < nq) t += ` Signal ${S.wave === 'square' ? 'carré' : S.wave === 'triangle' ? 'triangle' : 'en dents de scie'} : il contient des harmoniques à ${S.wave === 'sawtooth' ? '2f, 3f, 4f' : '3f, 5f, 7f'}… jusqu'à fe/2.`;
+  $('#gNote').className = cls; $('#gNote').textContent = t;
+  $('#tHi').disabled = sw; $('#tLo').disabled = sw; $('#tStop').disabled = !sw;
+  $('#tStop').classList.toggle('on', sw);
+  if (G.res.length) $('#tRes').innerHTML = G.res.map(r => r.d > 0
+    ? `<span>Aigus : ${r.end ? 'encore entendu à' : 'plus rien au-dessus de'} <b>${hzx(r.f)}</b></span>`
+    : `<span>Graves : ${r.end ? 'encore entendu à' : 'plus rien en dessous de'} <b>${hzx(r.f)}</b> <span class="dim">(souvent la limite du haut-parleur)</span></span>`).join('');
+  if (sw) $('#tRes').insertAdjacentHTML('afterbegin', `<span>Balayage en cours : <b>${hzx(f)}</b></span>`);
+  $('#o1').textContent = ST.gen ? `${hzx(f)} · ${S.lvl} dBFS` : 'à l\'arrêt';
+  const T = f > 0 ? perT(f) : '∞', st = Math.pow(2, 1 / 12);
+  $('#fx1').innerHTML = `<h3>Formules · période, longueur d'onde, notes</h3>
+  <span class="eq"><i>T</i> = 1 / <i>f</i> &nbsp;(s)</span>
+  <span class="eq"><i>λ</i> = <i>c</i> / <i>f</i> &nbsp;(<i>c</i> ≈ 343 m/s dans l'air à 20 °C)</span>
+  <span class="eq">Octave : <i>f</i> × 2 · demi-ton : <i>f</i> × 2<sup>1/12</sup> ≈ <i>f</i> × 1,0595</span>
+  <span class="eq">Note : <i>n</i> = 69 + 12 · log<sub>2</sub>(<i>f</i> / 440) &nbsp;(La 3 = 440 Hz)</span>
+  <span class="eq">Amplitude : <i>A</i> = 10<sup>dBFS / 20</sup></span>
+  Une octave double la fréquence ; l'oreille entend environ 10 octaves, de 20 Hz à 20 kHz. Les graves ont des longueurs d'onde de plusieurs mètres, les aigus de quelques centimètres.
+  <span class="ex">f = ${hzx(f)} → T = ${T} · λ = ${lam(f)}<br>octave au-dessus : ${hzx(f * 2)} · demi-ton : ${hzx(f * st)} · A = ${fr(dbg(S.lvl), 3)}</span>`;
+}
+
+/* ===================== 02 numérisation ===================== */
+const D = { src: null, bufs: {}, fileData: null, fileName: '', t0: 0, len: 0, busy: false };
+async function digStart() {
+  if (!await ensureAudio()) return;
+  solo('dig');
+  digStopSrc();
+  if (S.dsrc === 'file' && !D.fileData) { $('#dFile').click(); return; }
+  D.busy = true; uiDig();
+  let b = null;
+  try { b = await digBuffer(S.dsrc); } catch (e) { D.err = 'Lecture du fichier impossible : ' + (e && e.message || e); }
+  D.busy = false;
+  if (!b) { ST.dig = false; uiDig(); return; }
+  const s = A.ctx.createBufferSource(); s.buffer = b; s.loop = true; s.connect(A.digIn);
+  A.digOut.gain.cancelScheduledValues(A.ctx.currentTime); A.digOut.gain.setValueAtTime(1, A.ctx.currentTime);
+  s.start(); D.src = s; D.t0 = A.ctx.currentTime; D.len = b.duration; D.err = null;
+  ST.dig = true; digApply(); uiDig();
+}
+function digStopSrc() {
+  if (!D.src) return;
+  const s = D.src, t = A.ctx.currentTime;
+  A.digOut.gain.cancelScheduledValues(t); A.digOut.gain.setTargetAtTime(0, t, 0.01);
+  s.stop(t + 0.06); s.onended = () => s.disconnect();
+  D.src = null;
+}
+function digStop() { if (!D.src && !ST.dig) return; digStopSrc(); ST.dig = false; uiDig(); }
+async function digBuffer(k) {
+  const r = sr(), key = k + '@' + r + (k === 'file' ? '@' + D.fileName : '');
+  if (D.bufs[key]) return D.bufs[key];
+  let b;
+  if (k === 'music') b = await renderMusic(r);
+  else if (k === 'sweep') b = makeSweep(A.ctx);
+  else if (k === 'steps') b = makeSteps(A.ctx);
+  else if (k === 'sine') b = makeSine(A.ctx);
+  else if (k === 'file') { if (!D.fileData) return null; b = await A.ctx.decodeAudioData(D.fileData.slice(0)); }
+  D.bufs[key] = b;
+  return b;
+}
+function digApply() {
+  if (!A.ctx || !A.deg) return;
+  const r = sr(), tgt = S.fs, byp = tgt >= r, fc = Math.min(0.454 * tgt, r / 2 * 0.98), t = A.ctx.currentTime;
+  A.deg.set({ r: Math.min(1, tgt / r), bits: S.bits, dither: S.dither });
+  A.aa.forEach(f => { f.type = S.aa && !byp ? 'lowpass' : 'allpass'; f.frequency.setValueAtTime(fc, t); });
+  A.rc.forEach(f => { f.type = S.rec && !byp ? 'lowpass' : 'allpass'; f.frequency.setValueAtTime(fc, t); });
+  A.digIn.gain.setTargetAtTime(dbg(S.inLvl), t, 0.01);
+}
+const dPos = f => Math.round(Math.log(f / 2000) / Math.log(96) * 1000);
+const dFreq = p => { let f = 2000 * Math.pow(96, p / 1000); for (const s of FSL) if (Math.abs(f / s - 1) < 0.025) return s; return Math.round(f / 10) * 10; };
+const khz = f => fr(f / 1000, f % 1000 ? 3 : 0).replace(/0+$/, '').replace(/,$/, '');
+const alias = (f, fe) => Math.abs(f - Math.round(f / fe) * fe);
+function drawDig() {
+  const cv = $('#dViz'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
+  /* zone principale (2 ms), barre des nuances à droite */
+  const X0 = 44, X1 = 600, Y0 = 34, Y1 = 270, T = 0.002, yOf = v => (Y0 + Y1) / 2 - v * (Y1 - Y0) / 2 * 0.92, xOf = t => X0 + t / T * (X1 - X0);
+  const BX0 = 640, BX1 = 700;
+  const fe = S.fs, n = S.bits, q = Math.pow(2, n - 1), N2 = 2 * q, F2 = 3700, cutAA = 0.454 * fe;
+  const sig = t => 0.78 * Math.sin(2 * Math.PI * 1000 * t) + 0.18 * Math.sin(2 * Math.PI * F2 * t + 0.6);
+  const keep1 = !S.aa || 1000 < cutAA, keep2 = !S.aa || F2 < cutAA;
+  const sigF = t => (keep1 ? 0.78 * Math.sin(2 * Math.PI * 1000 * t) : 0) + (keep2 ? 0.18 * Math.sin(2 * Math.PI * F2 * t + 0.6) : 0);
+  const code = v => clamp(Math.round(v * q), -q, q - 1), qz = v => code(v) / q;
+  const mono = "500 15px 'IBM Plex Mono', monospace", ui = "600 15px 'Barlow Semi Condensed', sans-serif";
+  ctx.fillStyle = '#060708'; ctx.fillRect(0, 0, W, H);
+  /* en-tête : nombre de nuances */
+  ctx.font = "600 19px 'Barlow Condensed', sans-serif"; ctx.textAlign = 'left'; ctx.fillStyle = '#e8b84a';
+  ctx.fillText(`${n} BITS → 2^${n} = ${fr(N2)} NUANCES`, X0, 22);
+  ctx.font = mono; ctx.textAlign = 'right'; ctx.fillStyle = '#86e0a2';
+  ctx.fillText(`${fr(Math.round(T * fe) + 1)} échantillons en 2 ms`, X1, 22);
+  /* grille des niveaux : une ligne par niveau tant qu'elles restent lisibles */
+  const step = (Y1 - Y0) * 0.92 / N2;
+  if (step >= 2.2) {
+    ctx.lineWidth = 1;
+    for (let k = -q; k <= q; k++) { const y = Math.round(yOf((k - 0.5) / q)) + 0.5; ctx.strokeStyle = 'rgba(232,184,74,' + (step > 8 ? .22 : .13) + ')'; ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X1, y); ctx.stroke(); }
+  } else {
+    ctx.fillStyle = 'rgba(232,184,74,.035)'; ctx.fillRect(X0, yOf(1), X1 - X0, yOf(-1) - yOf(1));
+  }
+  ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.beginPath(); ctx.moveTo(X0, yOf(0) + 0.5); ctx.lineTo(X1, yOf(0) + 0.5); ctx.stroke();
+  ctx.fillStyle = '#5f6870'; ctx.textAlign = 'right';
+  ctx.fillText('0', X0 - 4, yOf(0) + 5); ctx.fillText('+1', X0 - 4, yOf(1) + 12); ctx.fillText('−1', X0 - 4, yOf(-1));
+  const NP = 600, curve = (fn, col, w, dash, xa = X0, xb = X1, ta = 0, tb = T, yF = yOf) => {
+    ctx.strokeStyle = col; ctx.lineWidth = w; ctx.setLineDash(dash || []); ctx.beginPath();
+    for (let i = 0; i <= NP; i++) { const t = ta + (tb - ta) * i / NP, x = xa + (xb - xa) * i / NP, y = yF(fn(t)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke(); ctx.setLineDash([]);
+  };
+  curve(sig, 'rgba(142,151,159,.75)', 2);
+  if (!(keep1 && keep2)) curve(sigF, '#86e0a2', 2, [7, 5]);
+  const k0 = -40, k1 = Math.ceil(T * fe) + 40, smp = [];
+  for (let k = k0; k <= k1; k++) smp.push([k, qz(sigF(k / fe))]);
+  const vis = smp.filter(([k]) => k >= 0 && k / fe <= T);
+  if (S.rec) {
+    const sinc = x => x === 0 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x);
+    curve(t => { let s = 0; for (const [k, v] of smp) s += v * sinc(fe * t - k); return s; }, '#ec3a8c', 2.2);
+  } else {
+    ctx.strokeStyle = '#ec3a8c'; ctx.lineWidth = 2.2; ctx.beginPath();
+    vis.forEach(([k, v], i) => { const x = xOf(k / fe), xn = xOf(Math.min(T, (k + 1) / fe)), y = yOf(v); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); ctx.lineTo(xn, y); });
+    ctx.stroke();
+  }
+  /* échantillons, colorés selon leur nuance */
+  const shade = c => { const g = Math.round(40 + 215 * (c + q) / (N2 - 1)); return `rgb(${g},${g},${g})`; };
+  const big = vis.length < 90;
+  ctx.lineWidth = 1;
+  for (const [k, v] of vis) {
+    const x = xOf(k / fe), y = yOf(v);
+    if (big) { ctx.strokeStyle = 'rgba(232,184,74,.55)'; ctx.beginPath(); ctx.moveTo(x, yOf(0)); ctx.lineTo(x, y); ctx.stroke(); }
+    ctx.fillStyle = '#e8b84a'; ctx.beginPath(); ctx.arc(x, y, big ? 4.5 : 2.2, 0, Math.PI * 2); ctx.fill();
+    if (big) { ctx.fillStyle = shade(code(v)); ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill(); }
+  }
+  ctx.textAlign = 'left'; ctx.fillStyle = '#8e979f'; ctx.font = mono;
+  for (let i = 0; i <= 4; i++) { const t = T * i / 4, x = xOf(t); ctx.fillText(fr(t * 1000, 1) + ' ms', clamp(x - 22, 2, X1 - 70), Y1 + 22); }
+
+  /* barre des nuances : 2^n paliers alignés sur l'axe vertical */
+  ctx.textAlign = 'center'; ctx.font = ui; ctx.fillStyle = '#e6e9ec';
+  ctx.fillText('NUANCES', (BX0 + BX1) / 2, Y0 - 12);
+  const yT = yOf(1), yB = yOf(-1);
+  if (step >= 0.6) {
+    for (let k = -q; k < q; k++) {
+      const ya = yOf((k + 0.5) / q), yb = yOf((k - 0.5) / q);
+      ctx.fillStyle = shade(k); ctx.fillRect(BX0, ya, BX1 - BX0, yb - ya + 0.4);
+      if (step >= 5) { ctx.fillStyle = '#060708'; ctx.fillRect(BX0, Math.round(ya), BX1 - BX0, 1); }
+    }
+  } else {
+    const g = ctx.createLinearGradient(0, yB, 0, yT); g.addColorStop(0, 'rgb(40,40,40)'); g.addColorStop(1, '#fff');
+    ctx.fillStyle = g; ctx.fillRect(BX0, yT, BX1 - BX0, yB - yT);
+  }
+  ctx.strokeStyle = '#333a42'; ctx.strokeRect(BX0 - 0.5, yT - 0.5, BX1 - BX0 + 1, yB - yT + 1);
+  ctx.font = "500 22px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#e8b84a';
+  ctx.fillText(N2 >= 1e6 ? fr(N2 / 1e6, 1) + ' M' : N2 >= 10000 ? fr(N2 / 1000, 0) + ' k' : fr(N2), (BX0 + BX1) / 2, Y1 + 8);
+  ctx.font = mono; ctx.fillStyle = '#8e979f';
+  ctx.fillText(step >= 0.6 ? 'paliers' : 'trop fins', (BX0 + BX1) / 2, Y1 + 26);
+  ctx.fillText(step >= 0.6 ? 'visibles' : 'pour l\'œil', (BX0 + BX1) / 2, Y1 + 42);
+
+}
+function uiDig() {
+  const r = sr(), fe = S.fs, q2 = Math.pow(2, S.bits);
+  $('#dBV').textContent = S.bits + ' bits'; $('#dB').value = S.bits;
+  $('#dInV').textContent = S.inLvl + ' dB'; $('#dIn').value = S.inLvl;
+  $('#dFV').textContent = fr(fe) + ' Hz'; if (document.activeElement !== $('#dF')) $('#dF').value = dPos(fe);
+  $('#dDit').checked = S.dither; $('#dAA').checked = S.aa; $('#dRec').checked = S.rec;
+  $('#dLev').textContent = fr(q2);
+  $('#dSnr').textContent = fr(6.02 * S.bits + 1.76, 1) + ' dB';
+  $('#dLsb').textContent = fr(-6.02 * (S.bits - 1), 1) + ' dBFS';
+  $('#dNyq').textContent = fr(fe / 2) + ' Hz';
+  const kb = fe * S.bits * 2 / 1000;
+  $('#dRate').textContent = fr(kb, 1) + ' kb/s';
+  $('#dMin').textContent = fr(kb * 60 / 8 / 1000, 2) + ' Mo';
+  $('#dFileN').textContent = D.fileName || 'aucun fichier';
+  const b = $('#dPlay'); b.classList.toggle('on', ST.dig);
+  b.textContent = D.busy ? 'Préparation du son…' : ST.dig ? '■ Arrêter' : '▶ Écouter le son numérisé';
+  b.disabled = D.busy;
+  $('#dSwR').hidden = !(ST.dig && (S.dsrc === 'sweep' || S.dsrc === 'steps'));
+  $('#dSwL').textContent = S.dsrc === 'steps' ? 'Séquence : son émis → restitué' : 'Balayage : émis → restitué';
+  const msg = [];
+  let cls = 'note ok';
+  if (D.err) { msg.push(D.err); cls = 'note err'; }
+  if (fe >= r) { msg.push(`Votre moteur audio tourne à ${fr(r)} Hz : un réglage à ${fr(fe)} Hz ne change rien ici, l'échantillonnage simulé est transparent. Au-dessus de 20 kHz, de toute façon, l'oreille n'entend plus.`); cls = 'note wa'; }
+  else if (!S.aa) { msg.push(`Sans filtre anti-repliement, tout ce qui dépasse ${fr(fe / 2)} Hz (fe/2) se replie en fréquences parasites audibles : un son de ${fr(Math.min(fe * 0.8, 18000))} Hz ressort à ${fr(alias(Math.min(fe * 0.8, 18000), fe))} Hz.`); cls = 'note err'; }
+  else msg.push(`Le filtre anti-repliement coupe au-dessus de ${fr(0.454 * fe)} Hz : ${fe < 40000 ? 'les aigus au-delà sont perdus, le son devient plus sourd.' : 'toute la zone audible est conservée.'}`);
+  if (!S.rec && fe < r) msg.push('Sans filtre de lissage, la sortie reste en « marches d\'escalier » : des images du spectre apparaissent autour de fe, 2fe… et ajoutent un grésillement aigu.');
+  if (S.bits <= 8) { msg.push(`À ${S.bits} bits, seulement ${fr(q2)} niveaux : le bruit de quantification est à environ −${fr(6.02 * S.bits + 1.76, 0)} dB du niveau maximal, très audible dans les passages calmes.${S.dither ? ' Le dither le transforme en souffle régulier, moins gênant que la distorsion.' : ''}`); if (cls === 'note ok') cls = 'note wa'; }
+  if (S.dsrc === 'music') msg.push('Morceau de synthèse libre de droits (généré dans le navigateur), boucle de 20 s qui finit sur un piano très doux.');
+  $('#dNote').className = cls; $('#dNote').innerHTML = msg.map(m => `<p>${m}</p>`).join('');
+  $('#o2').textContent = `${S.bits} bits · ${khz(fe)} kHz${S.aa ? '' : ' · sans filtre'}`;
+  const F2 = 3700, al = alias(F2, fe);
+  $('#fx2').innerHTML = `<h3>Formules · Nyquist, bits, débit</h3>
+  <span class="eq"><i>f</i><sub>max</sub> = <i>f</i><sub>e</sub> / 2 &nbsp;(Nyquist-Shannon)</span>
+  <span class="eq">Repliement : <i>f'</i> = | <i>f</i> − <i>k</i> · <i>f</i><sub>e</sub> | &nbsp;(<i>k</i> entier le plus proche)</span>
+  <span class="eq">Niveaux = 2<sup><i>n</i></sup> ; RSB ≈ 6,02 · <i>n</i> + 1,76 dB</span>
+  <span class="eq">Débit = <i>f</i><sub>e</sub> × <i>n</i> × voies &nbsp;(bit/s)</span>
+  Échantillonner, c'est mesurer le signal <b>fe</b> fois par seconde ; quantifier, c'est arrondir chaque mesure à l'un des <b>2<sup>n</sup></b> niveaux. Chaque bit ajouté apporte 6 dB de dynamique.
+  <span class="ex">${S.bits} bits · ${fr(fe)} Hz : ${fr(q2)} niveaux · RSB ${fr(6.02 * S.bits + 1.76, 1)} dB · ${fr(kb, 1)} kb/s<br>signal test 3 700 Hz : ${F2 < fe / 2 ? 'sous fe/2, conservé' : S.aa ? 'au-dessus de fe/2, supprimé par le filtre' : 'replié à ' + fr(al) + ' Hz'}</span>`;
+  drawDig();
+}
+function makeSine(ctx) {
+  const r = ctx.sampleRate, b = ctx.createBuffer(2, r, r);
+  for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < r; i++) d[i] = 0.891 * Math.sin(2 * Math.PI * 1000 * i / r); }
+  return b;
+}
+const SWT = 12, SWF0 = 20, SWF1 = 20000;
+function makeSweep(ctx) {
+  const r = ctx.sampleRate, n = Math.round((SWT + 0.6) * r), b = ctx.createBuffer(2, n, r), L = Math.log(SWF1 / SWF0), K = 2 * Math.PI * SWF0 * SWT / L;
+  const d = b.getChannelData(0), fade = 0.01 * r;
+  for (let i = 0; i < SWT * r; i++) { const t = i / r, e = Math.min(1, i / fade, (SWT * r - i) / fade); d[i] = 0.5 * e * Math.sin(K * (Math.exp(t * L / SWT) - 1)); }
+  b.getChannelData(1).set(d);
+  return b;
+}
+/* séquence de 6 sinus purs (sans harmonique), du grave à l'aigu : 2 s de son puis 0,5 s de silence */
+const STEPS = [['Extrême grave', 50], ['Grave', 125], ['Bas médium', 400], ['Médium', 1000], ['Haut médium', 3000], ['Aigu', 10000]], STP_ON = 2, STP_T = 2.5;
+function makeSteps(ctx) {
+  const r = ctx.sampleRate, n = Math.round(STEPS.length * STP_T * r), b = ctx.createBuffer(2, n, r), d = b.getChannelData(0), fade = 0.02 * r, on = STP_ON * r;
+  STEPS.forEach(([, f], i) => {
+    const o = Math.round(i * STP_T * r);
+    for (let k = 0; k < on; k++) { const e = Math.min(1, k / fade, (on - k) / fade); d[o + k] = 0.5 * e * Math.sin(2 * Math.PI * f * k / r); }
+  });
+  b.getChannelData(1).set(d);
+  return b;
+}
+function impulse(oc, dur) {
+  const n = Math.ceil(dur * oc.sampleRate), b = oc.createBuffer(2, n, oc.sampleRate);
+  for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3.2); }
+  return b;
+}
+async function renderMusic(r) {
+  const bt = 60 / 96, bar = 4 * bt, NB = 8, len = NB * bar;
+  const oc = new OfflineAudioContext(2, Math.ceil(len * r), r);
+  const mix = oc.createGain(); mix.gain.value = 0.6; mix.connect(oc.destination);
+  const rv = oc.createConvolver(); rv.buffer = impulse(oc, 2.4); const rvIn = oc.createGain(); rvIn.gain.value = 0.3; rvIn.connect(rv); rv.connect(mix);
+  const nz = oc.createBuffer(1, r, r); { const d = nz.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+  const out = (node, pan, wet) => {
+    let n = node;
+    if (pan) { const p = oc.createStereoPanner(); p.pan.value = pan; n.connect(p); n = p; }
+    n.connect(mix);
+    if (wet) { const g = oc.createGain(); g.gain.value = wet; n.connect(g); g.connect(rvIn); }
+  };
+  const envG = (t, a, pk, tc, hold = 0) => { const g = oc.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(pk, t + a); g.gain.setTargetAtTime(0, t + a + hold, tc); return g; };
+  const noise = (t, d) => { const s = oc.createBufferSource(); s.buffer = nz; s.loop = true; s.start(t, Math.random() * 0.5); s.stop(t + d); return s; };
+  const kick = t => { const o = oc.createOscillator(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.13); const g = envG(t, 0.003, 1, 0.09); o.connect(g); out(g, 0, 0); o.start(t); o.stop(t + 0.7); };
+  const snare = t => {
+    const s = noise(t, 0.45), f = oc.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2200; f.Q.value = 0.6;
+    const g = envG(t, 0.002, 0.55, 0.06); s.connect(f); f.connect(g); out(g, 0, 0.35);
+    const o = oc.createOscillator(); o.type = 'triangle'; o.frequency.value = 185; const g2 = envG(t, 0.002, 0.35, 0.04); o.connect(g2); out(g2, 0, 0.1); o.start(t); o.stop(t + 0.3);
+  };
+  const hat = (t, open, v) => { const s = noise(t, open ? 0.7 : 0.15), f = oc.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7500; const g = envG(t, 0.001, 0.2 * v, open ? 0.12 : 0.022); s.connect(f); f.connect(g); out(g, 0.3, 0.15); };
+  const shk = (t, v) => { const s = noise(t, 0.12), f = oc.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 12000; const g = envG(t, 0.004, 0.13 * v, 0.02); s.connect(f); f.connect(g); out(g, -0.45, 0.1); };
+  const bass = (t, m, d) => {
+    const o = oc.createOscillator(); o.type = 'sawtooth'; o.frequency.value = mf(m);
+    const f = oc.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 5; f.frequency.setValueAtTime(1400, t); f.frequency.exponentialRampToValueAtTime(180, t + d);
+    const g = envG(t, 0.005, 0.3, d * 0.5); o.connect(f); f.connect(g); out(g, 0, 0); o.start(t); o.stop(t + d + 0.3);
+  };
+  const pad = (t, ch, d) => ch.forEach((m, i) => [-7, 7].forEach(dt => {
+    const o = oc.createOscillator(); o.type = 'sawtooth'; o.frequency.value = mf(m); o.detune.value = dt;
+    const f = oc.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1900;
+    const g = oc.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.03, t + 0.5); g.gain.setValueAtTime(0.03, t + d - 0.3); g.gain.linearRampToValueAtTime(0, t + d + 0.15);
+    o.connect(f); f.connect(g); out(g, (i - 1) * 0.4, 0.5); o.start(t); o.stop(t + d + 0.2);
+  }));
+  const bell = (t, m, v = 1) => [[1, 0.16, 1.4], [2.76, 0.06, 0.6], [5.4, 0.035, 0.3], [8.9, 0.02, 0.15]].forEach(([k, a, dec]) => {
+    const fq = mf(m) * k; if (fq >= r / 2 * 0.95) return;
+    const o = oc.createOscillator(); o.frequency.value = fq; const g = envG(t, 0.002, a * v, dec / 3); o.connect(g); out(g, 0.35, 0.5); o.start(t); o.stop(t + dec * 2.5 + 0.2);
+  });
+  const piano = (t, m, v, d = 3) => {
+    const f0 = mf(m);
+    for (let k = 1; k <= 12; k++) {
+      const fq = f0 * k * Math.sqrt(1 + 0.0004 * k * k); if (fq >= r / 2 * 0.95) break;
+      const o = oc.createOscillator(); o.frequency.value = fq; const g = envG(t, 0.003, v * 0.22 / Math.pow(k, 1.25), d / (1 + 0.5 * k) / 3);
+      o.connect(g); out(g, -0.15, 0.45); o.start(t); o.stop(t + d + 0.2);
+    }
+  };
+  const CH = [[57, 60, 64], [53, 57, 60], [55, 60, 64], [55, 59, 62]], ROOT = [45, 41, 48, 43];
+  const MEL = [[76, 0, 79, 76, 74, 0, 72, 74], [72, 0, 69, 0, 72, 74, 76, 0], [79, 0, 76, 79, 81, 0, 79, 76], [74, 0, 76, 0, 79, 0, 74, 72]];
+  for (let b = 0; b < NB; b++) {
+    const t0 = b * bar, c = b % 4;
+    if (b < 6) { pad(t0, CH[c], bar); for (let e = 0; e < 8; e++) hat(t0 + e * bt / 2, e === 7 && b % 2 === 1, e % 2 ? 0.7 : 1); }
+    if (b < 2) MEL[c].forEach((m, e) => { if (m && e % 2 === 0) bell(t0 + e * bt / 2, m, 0.6); });
+    if (b >= 2 && b < 6) {
+      kick(t0); kick(t0 + 2 * bt); kick(t0 + 2.5 * bt); snare(t0 + bt); snare(t0 + 3 * bt);
+      for (let s = 0; s < 16; s++) shk(t0 + s * bt / 4, s % 4 === 0 ? 1 : 0.6);
+      for (let e = 0; e < 8; e++) bass(t0 + e * bt / 2, ROOT[c] + (e % 4 === 3 ? 12 : 0), bt / 2 * 0.9);
+      MEL[c].forEach((m, e) => { if (m) bell(t0 + e * bt / 2, m); });
+    }
+    if (b === 6) { [45, 57, 64, 69, 72].forEach(m => piano(t0, m, 0.5, 4)); [76, 74, 72, 69].forEach((m, i) => piano(t0 + bt * (1 + i * 0.75), m, 0.35, 2.5)); }
+    if (b === 7) [45, 57, 60, 64].forEach(m => piano(t0, m, 0.1, 5));
+  }
+  const buf = await oc.startRendering();
+  let pk = 0; for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i++) { const a = Math.abs(d[i]); if (a > pk) pk = a; } }
+  const k = pk > 0 ? 0.891 / pk : 1;
+  for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < d.length; i++) d[i] *= k; }
+  return buf;
+}
+
+/* ===================== 03 FIP ===================== */
+const R = { el: null, node: null, cors: true, t0: 0, ttfa: null, state: 'arrêt', quiz: null, score: 0, n: 0, qPrev: -1 };
+const fipURL = (st, qi) => `https://icecast.radiofrance.fr/${st}-${QUAL[qi].file}?id=radiofrance`;
+async function fipStart() {
+  if (!await ensureAudio()) return;
+  solo('fip');
+  fipStopEl();
+  ST.fip = true; R.ttfa = null;
+  fipOpen(true);
+  uiFip();
+}
+function fipOpen(cors) {
+  const el = new Audio(), qi = R.quiz ? R.quiz.qi : S.fq;
+  if (cors) el.crossOrigin = 'anonymous';
+  el.preload = 'auto';
+  R.el = el; R.cors = cors; R.state = 'connexion…'; R.t0 = performance.now(); R.qi = qi;
+  el.addEventListener('playing', () => { if (R.el !== el) return; R.state = 'lecture en direct'; if (R.ttfa == null) R.ttfa = performance.now() - R.t0; uiFip(); });
+  el.addEventListener('waiting', () => { if (R.el !== el) return; R.state = 'mise en mémoire tampon…'; uiFip(); });
+  el.addEventListener('error', () => {
+    if (R.el !== el) return;
+    if (cors) { fipStopEl(); fipOpen(false); }
+    else { R.state = 'flux indisponible'; ST.fip = false; uiFip(); }
+  });
+  if (cors) { try { R.node = A.ctx.createMediaElementSource(el); R.node.connect(A.fipBus); } catch (e) { R.node = null; } }
+  else el.volume = clamp(dbg(S.fvol) * dbg(S.master), 0, 1);
+  el.src = fipURL(S.fst, qi);
+  el.play().catch(() => { });
+  uiFip();
+}
+function fipStopEl() {
+  if (R.el) { const el = R.el; R.el = null; try { el.pause(); el.removeAttribute('src'); el.load(); } catch (e) { } }
+  if (R.node) { try { R.node.disconnect(); } catch (e) { } R.node = null; }
+}
+function fipStop() { if (!R.el && !ST.fip) return; fipStopEl(); ST.fip = false; R.state = 'arrêt'; uiFip(); }
+function fipVol() {
+  if (A.fipBus) A.fipBus.gain.setTargetAtTime(dbg(S.fvol), A.ctx.currentTime, 0.02);
+  if (R.el && !R.cors) R.el.volume = clamp(dbg(S.fvol) * dbg(S.master), 0, 1);
+}
+function quizStart() {
+  let qi; do { qi = Math.floor(Math.random() * QUAL.length); } while (qi === R.qPrev && QUAL.length > 1);
+  R.qPrev = qi; R.quiz = { qi, done: false };
+  $('#monBay').classList.add('blind');
+  $('#qAns').hidden = false;
+  $('#qAns').innerHTML = QUAL.map((q, i) => `<button type="button" data-a="${i}">${q.n} kb/s</button>`).join('');
+  $('#qMsg').innerHTML = '<span>Écoutez… puis choisissez la qualité.</span>';
+  fipStart();
+}
+function quizAnswer(i) {
+  if (!R.quiz || R.quiz.done) return;
+  const ok = i === R.quiz.qi, q = QUAL[R.quiz.qi];
+  R.n++; if (ok) R.score++;
+  R.quiz.done = true;
+  $('#monBay').classList.remove('blind');
+  $('#qAns').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.a === R.quiz.qi)));
+  $('#qMsg').innerHTML = `<span>${ok ? '✓ Bravo' : '✕ Raté'} : c'était <b>${q.codec} ${q.kbps} kb/s</b>. Score : <b>${R.score} / ${R.n}</b></span><span class="dim">Regardez maintenant la coupure des aigus sur le spectrogramme.</span>`;
+  S.fq = R.quiz.qi; R.quiz = null;
+  syncSeg(); uiFip();
+}
+function barsSVG() {
+  const W = 340, rows = QUAL.map((q, i) => [q.n + ' kb/s', q.kbps, i]).concat([['CD · PCM 16 bits 44,1 kHz', CD_KBPS, -1]]);
+  const X0 = 112, X1 = 300, H = rows.length * 22 + 8, cur = R.quiz ? -2 : S.fq;
+  let g = '';
+  rows.forEach(([n, k, i], j) => {
+    const y = 6 + j * 22, w = Math.max(2, (X1 - X0) * k / CD_KBPS), col = i === -1 ? '#e2e4ea' : i === cur ? '#e8b84a' : '#5b95f0';
+    g += `<text x="${X0 - 6}" y="${y + 11}" text-anchor="end" fill="${i === cur ? '#e8b84a' : '#8e979f'}" class="tu" style="font-size:10px">${i === -1 ? 'CD audio' : (R.quiz ? '???' : n)}</text>
+    <rect x="${X0}" y="${y + 2}" width="${w}" height="12" rx="2" fill="${col}" opacity="${i === cur || i === -1 ? .95 : .55}"/>
+    <text x="${X0 + w + 4}" y="${y + 12}" fill="${col}" style="font-size:9.5px">${i === -1 ? fr(k, 1) : (R.quiz ? '' : '÷' + fr(CD_KBPS / k, 1))}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Débits comparés au CD" style="background:#0a0c0e;border-radius:4px">${g}</svg>`;
+}
+function uiFip() {
+  const qi = R.quiz ? R.quiz.qi : S.fq, q = QUAL[qi], hid = !!R.quiz, on = ST.fip;
+  $('#fSt').value = S.fst; $('#fV').value = S.fvol; $('#fVV').textContent = (S.fvol > 0 ? '+' : '') + S.fvol + ' dB';
+  const b = $('#fPlay'); b.classList.toggle('on', on); b.textContent = on ? '■ Arrêter la radio' : '▶ Écouter FIP en direct';
+  $('#fLv').innerHTML = hid ? '???<small> kb/s</small>' : `${q.kbps}<small> kb/s</small>`;
+  const stn = (STATIONS.find(s => s[0] === S.fst) || ['', ''])[1];
+  $('#fLs').innerHTML = `<span class="dotlive ${on && /lecture/.test(R.state) ? 'on' : ''}"></span><b>${hid ? 'Codec mystère' : q.codec}</b><br>${stn}`;
+  $('#fUrl').textContent = hid ? 'adresse masquée pendant le quiz' : fipURL(S.fst, qi);
+  $('#fState').textContent = R.state + (on && !R.cors && R.el ? ' · sans analyse' : '');
+  $('#fT').textContent = R.ttfa != null ? fr(R.ttfa / 1000, 2) + ' s' : '—';
+  $('#fRatio').textContent = hid ? '???' : '÷ ' + fr(CD_KBPS / q.kbps, 1);
+  $('#fMo').textContent = hid ? '???' : fr(q.kbps * 3600 / 8 / 1000, 1) + ' Mo';
+  $('#fBars').innerHTML = barsSVG();
+  $('#o3').textContent = on ? (hid ? 'Quiz en cours' : `${q.codec} ${q.kbps} kb/s · en direct`) : 'à l\'arrêt';
+  let cls = 'note', t = 'Les flux sont lus en direct depuis les serveurs de Radio France : il faut une connexion internet, et un léger délai de démarrage est normal.';
+  if (R.state === 'flux indisponible') { cls = 'note err'; t = `Flux indisponible pour cette station dans cette qualité (${q.codec} ${q.kbps} kb/s). Essayez une autre qualité ou l'antenne principale.`; }
+  else if (on && R.el && !R.cors) { cls = 'note wa'; t = 'Le flux est lu, mais son serveur n\'autorise pas l\'analyse par le navigateur (règle CORS) : le monitoring ne voit pas ce signal. Le volume général s\'applique quand même.'; }
+  else if (on) { cls = 'note ok'; t = 'MP3 et AAC sont des codecs perceptifs : à bas débit, ils coupent les aigus pour économiser des bits. Observez la limite haute du spectre et du spectrogramme.'; }
+  $('#fNote').className = cls; $('#fNote').textContent = t;
+  $('#qGo').textContent = R.quiz ? 'Nouvelle écoute à l\'aveugle' : 'Écoute à l\'aveugle';
+  $('#fx3').innerHTML = `<h3>Formules · débit et compression</h3>
+  <span class="eq">Débit (kb/s) = taille (kbit) / durée (s)</span>
+  <span class="eq">CD : 44 100 × 16 × 2 = 1 411,2 kb/s</span>
+  <span class="eq">Compression = 1 411,2 / débit</span>
+  <span class="eq">Mo par heure = débit × 3 600 / 8 / 1 000</span>
+  Un codec perceptif retire ce que l'oreille ne remarque pas : sons masqués par d'autres plus forts, détails fins des aigus. L'AAC est plus efficace que le MP3 à débit égal.
+  <span class="ex">${hid ? 'Qualité masquée pendant le quiz' : `${q.codec} ${q.kbps} kb/s : compression ÷ ${fr(CD_KBPS / q.kbps, 1)} · ${fr(q.kbps * 3600 / 8 / 1000, 1)} Mo/h · ${fr(q.kbps / 8, 0)} ko par seconde`}</span>`;
+}
+
+/* ===================== 04 monitoring : FFT maison ===================== */
+const M = { N: 0, key: '', td: new Float32Array(32768), re: null, im: null, w: null, rev: null, cs: null, sn: null,
+  pAvg: null, pLong: null, pInst: null, dA: null, dI: null, hold: null, S1: 1, enbw: 1, df: 1,
+  peak: null, cut: null, sinad: null, freeze: false, hx: null, last: 0, lastTxt: 0 };
+function prepFFT(N) {
+  M.N = N; M.re = new Float64Array(N); M.im = new Float64Array(N); M.w = new Float64Array(N);
+  M.rev = new Uint32Array(N); M.cs = new Float64Array(N / 2); M.sn = new Float64Array(N / 2);
+  const lev = Math.log2(N);
+  for (let i = 0; i < N; i++) { let r = 0, x = i; for (let b = 0; b < lev; b++) { r = (r << 1) | (x & 1); x >>= 1; } M.rev[i] = r; }
+  for (let k = 0; k < N / 2; k++) { M.cs[k] = Math.cos(2 * Math.PI * k / N); M.sn[k] = Math.sin(2 * Math.PI * k / N); }
+  let s1 = 0, s2 = 0;
+  for (let i = 0; i < N; i++) { const a = 2 * Math.PI * i / (N - 1), w = 0.35875 - 0.48829 * Math.cos(a) + 0.14128 * Math.cos(2 * a) - 0.01168 * Math.cos(3 * a); M.w[i] = w; s1 += w; s2 += w * w; }
+  M.S1 = s1; M.enbw = N * s2 / (s1 * s1);
+  const h = N / 2;
+  M.pAvg = new Float64Array(h); M.pLong = new Float64Array(h); M.pInst = new Float64Array(h);
+  M.dA = new Float32Array(h).fill(-200); M.dI = new Float32Array(h).fill(-200); M.hold = new Float32Array(h).fill(-200);
+}
+function fft(re, im) {
+  const N = M.N, rev = M.rev, cs = M.cs, sn = M.sn;
+  for (let i = 0; i < N; i++) { const j = rev[i]; if (j > i) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+  for (let size = 2; size <= N; size <<= 1) {
+    const half = size >> 1, step = N / size;
+    for (let i = 0; i < N; i += size) {
+      for (let j = 0, k = 0; j < half; j++, k += step) {
+        const a = i + j, b = a + half, c = cs[k], s = sn[k];
+        const tr = re[b] * c + im[b] * s, ti = im[b] * c - re[b] * s;
+        re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+      }
+    }
+  }
+}
+function analyze(dt) {
+  const N = S.fft, r = sr();
+  if (M.N !== N || !M.pAvg) prepFFT(N);
+  M.df = r / N;
+  if (!A.an) return false;
+  if (M.freeze) return true;
+  A.an.getFloatTimeDomainData(M.td);
+  const re = M.re, im = M.im, w = M.w, off = 32768 - N;
+  for (let i = 0; i < N; i++) { re[i] = M.td[off + i] * w[i]; im[i] = 0; }
+  fft(re, im);
+  const h = N / 2, sc = 2 / M.S1, al = { fast: 0.25, mid: 0.7, slow: 0.92 }[S.avg], dec = 8 * dt;
+  for (let k = 0; k < h; k++) {
+    const a = Math.hypot(re[k], im[k]) * (k ? sc : sc / 2), p = a * a;
+    M.pInst[k] = p;
+    M.pAvg[k] = al * M.pAvg[k] + (1 - al) * p;
+    M.pLong[k] = 0.96 * M.pLong[k] + 0.04 * p;
+    const d = 10 * Math.log10(M.pAvg[k] + 1e-30);
+    M.dA[k] = d; M.dI[k] = 10 * Math.log10(p + 1e-30);
+    M.hold[k] = Math.max(d, M.hold[k] - dec);
+  }
+  /* pic dominant, interpolé */
+  const k0 = Math.max(5, Math.ceil(5 / M.df)), dA = M.dA;
+  let km = k0; for (let k = k0; k < h - 2; k++) if (dA[k] > dA[km]) km = k;
+  const a = dA[km - 1], b = dA[km], c = dA[km + 1], den = a - 2 * b + c, p = den ? clamp(0.5 * (a - c) / den, -0.5, 0.5) : 0;
+  M.peak = b > -110 ? { f: (km + p) * M.df, db: b - 0.25 * (a - c) * p, k: km } : null;
+  /* SINAD si le signal est tonal */
+  let pt = 0, pp = 0;
+  for (let k = k0; k < h; k++) pt += M.pAvg[k];
+  for (let k = Math.max(k0, km - 8); k <= Math.min(h - 1, km + 8); k++) pp += M.pAvg[k];
+  M.sinad = (M.peak && M.peak.db > -70 && pp / pt > 0.6 && pt > pp) ? 10 * Math.log10(pp / (pt - pp)) : null;
+  /* étendue du contenu spectral : bandes de 1/12 d'octave sur la moyenne longue */
+  let tot = 0; for (let k = k0; k < h; k++) tot += M.pLong[k];
+  M.cut = null;
+  if (10 * Math.log10(tot / M.enbw + 1e-30) > -75) {
+    const bands = []; let fl = 200;
+    while (fl < r / 2 * 0.98) {
+      const fh = Math.min(fl * Math.pow(2, 1 / 12), r / 2), ka = Math.max(1, Math.floor(fl / M.df)), kb = Math.min(h - 1, Math.max(ka + 1, Math.floor(fh / M.df)));
+      let s = 0; for (let k = ka; k < kb; k++) s += M.pLong[k];
+      bands.push([fh, 10 * Math.log10(s / (kb - ka) + 1e-30)]); fl = fh;
+    }
+    let mx = -300, mn = 300; for (const [, l] of bands) { if (l > mx) mx = l; if (l < mn) mn = l; }
+    const th = Math.max(mn + 15, mx - 90, -175);
+    for (let i = bands.length - 1; i >= 0; i--) if (bands[i][1] > th) { M.cut = i === bands.length - 1 ? r / 2 : bands[i][0]; break; }
+  }
+  return true;
+}
+/* ===================== sonie (messages du worklet) ===================== */
+const MT = { d: null, dp: [-200, -200], hold: [[-200, 0], [-200, 0]], clip: [0, 0], reset() { this.d = null; this.dp = [-200, -200]; this.hold = [[-200, 0], [-200, 0]]; this.clip = [0, 0]; } };
+function onMeter(d) {
+  MT.d = d; const now = performance.now();
+  for (let c = 0; c < 2; c++) {
+    const v = l2d(d.pk[c]);
+    if (v > MT.dp[c]) MT.dp[c] = v;
+    if (v >= MT.hold[c][0] || now - MT.hold[c][1] > 2000) MT.hold[c] = [v, now];
+    if (d.pk[c] >= 0.9999) MT.clip[c] = now;
+  }
+}
+/* ===================== dessins du monitoring ===================== */
+const SP = { X0: 64, X1: 1186, Y0: 16, Y1: 404 };
+function fRange() { const nq = nyq(), log = S.xs === 'log', fmax = S.xr === '20k' ? Math.min(20000, nq) : nq, fmin = log ? (S.xr === '20k' ? 20 : 10) : 0; return { fmin, fmax, log }; }
+function xOfF(f, R0, X0, X1) { return R0.log ? X0 + Math.log(Math.max(f, R0.fmin) / R0.fmin) / Math.log(R0.fmax / R0.fmin) * (X1 - X0) : X0 + (f - R0.fmin) / (R0.fmax - R0.fmin) * (X1 - X0); }
+function fOfX(x, R0, X0, X1) { const u = (x - X0) / (X1 - X0); return R0.log ? R0.fmin * Math.pow(R0.fmax / R0.fmin, u) : R0.fmin + u * (R0.fmax - R0.fmin); }
+function binMap(n, fa) { /* fa(i) → fréquence du bord i ; renvoie bornes de raies */
+  const ka = new Int32Array(n), kb = new Int32Array(n), kf = new Float32Array(n), h = M.N / 2;
+  for (let i = 0; i < n; i++) { const f0 = fa(i), f1 = fa(i + 1); ka[i] = clamp(Math.floor(f0 / M.df), 1, h - 1); kb[i] = clamp(Math.floor(f1 / M.df), 1, h - 1); kf[i] = clamp(fa(i + 0.5) / M.df, 1, h - 2); }
+  return { ka, kb, kf };
+}
+function valAt(arr, mp, i) {
+  const a = mp.ka[i], b = mp.kb[i];
+  if (b > a) { let m = -300; for (let k = a; k < b; k++) if (arr[k] > m) m = arr[k]; return m; }
+  const kf = mp.kf[i], k = Math.floor(kf), u = kf - k; return arr[k] * (1 - u) + arr[k + 1] * u;
+}
+const OCT = []; for (let n = -20; n <= 20; n++) OCT.push(1000 * Math.pow(2, n / 3));
+const OCTN = [12.5, 16, 20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000, 25000, 31500, 40000, 50000, 63000, 80000];
+function nomOct(f) { let b = OCTN[0]; for (const v of OCTN) if (Math.abs(Math.log(v / f)) < Math.abs(Math.log(b / f))) b = v; return b; }
+const fLab = f => f >= 1000 ? fr(f / 1000, f % 1000 ? 1 : 0) + 'k' : fr(f, f % 1 ? 1 : 0);
+function drawSpec() {
+  const cv = $('#spec'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height, { X0, X1, Y0, Y1 } = SP, R0 = fRange(), rng = S.dbr;
+  const yOf = d => Y0 + clamp(-d / rng, 0, 1) * (Y1 - Y0), xF = f => xOfF(f, R0, X0, X1);
+  ctx.fillStyle = '#060708'; ctx.fillRect(0, 0, W, H);
+  /* zones infra / audible / ultra */
+  const xa = xF(Math.max(20, R0.fmin)), xb = xF(Math.min(20000, R0.fmax));
+  ctx.fillStyle = 'rgba(134,224,162,.05)'; ctx.fillRect(xa, Y0, xb - xa, Y1 - Y0);
+  if (R0.fmin < 20) { ctx.fillStyle = 'rgba(167,124,240,.08)'; ctx.fillRect(X0, Y0, xa - X0, Y1 - Y0); }
+  if (R0.fmax > 20000) { ctx.fillStyle = 'rgba(236,58,140,.08)'; ctx.fillRect(xb, Y0, X1 - xb, Y1 - Y0); }
+  ctx.font = "600 16px 'Barlow Semi Condensed', sans-serif"; ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(134,224,162,.55)'; ctx.fillText('ZONE AUDIBLE 20 Hz – 20 kHz', (xa + xb) / 2, Y0 + 18);
+  if (R0.fmax > 26000) { ctx.fillStyle = 'rgba(236,58,140,.6)'; ctx.fillText('ULTRASONS', (xb + X1) / 2, Y0 + 18); }
+  /* grille */
+  ctx.lineWidth = 1; ctx.font = "500 15px 'IBM Plex Mono', monospace";
+  const ticks = R0.log ? [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000] : (() => { const s = R0.fmax > 50000 ? 10000 : R0.fmax > 25000 ? 5000 : 2000, a = []; for (let f = 0; f <= R0.fmax; f += s) a.push(f); return a; })();
+  ctx.textAlign = 'center';
+  for (const f of ticks) { if (f < R0.fmin || f > R0.fmax) continue; const x = Math.round(xF(f)) + 0.5; ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y1); ctx.stroke(); ctx.fillStyle = '#a3acb4'; ctx.fillText(fLab(f), clamp(x, X0 + 14, X1 - 18), H - 14); }
+  ctx.textAlign = 'right';
+  const st = rng > 120 ? 20 : 10;
+  for (let d = 0; d <= rng; d += st) { const y = Math.round(yOf(-d)) + 0.5; ctx.strokeStyle = d ? 'rgba(255,255,255,.08)' : 'rgba(239,107,107,.5)'; ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X1, y); ctx.stroke(); ctx.fillStyle = '#a3acb4'; ctx.fillText(d ? '−' + d : '0', X0 - 8, y + 5); }
+  ctx.save(); ctx.translate(16, (Y0 + Y1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillStyle = '#5f6870'; ctx.fillText('dBFS', 0, 0); ctx.restore();
+  ctx.textAlign = 'right'; ctx.fillStyle = '#5f6870'; ctx.fillText('Hz', X1, H - 14 + 0);
+  /* Nyquist du moteur */
+  const nq = nyq();
+  if (nq <= R0.fmax * 1.001) { const x = Math.round(xF(nq)) - 1.5; ctx.strokeStyle = '#ec3a8c'; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y1); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = '#f6a9cc'; ctx.textAlign = 'right'; ctx.font = "500 14px 'IBM Plex Mono', monospace"; ctx.fillText('fe/2 = ' + fr(nq) + ' Hz', x - 6, Y0 + 40); }
+  if (!A.an || A.ctx.state !== 'running') { ctx.font = "600 24px 'Barlow Semi Condensed', sans-serif"; ctx.textAlign = 'center'; ctx.fillStyle = '#8e979f'; ctx.fillText('Lancez une écoute : le moteur audio démarre au premier clic', (X0 + X1) / 2, (Y0 + Y1) / 2); return; }
+  const n = X1 - X0;
+  if (S.view === 'fft') {
+    const key = 'p' + M.N + '|' + sr() + '|' + S.xs + '|' + S.xr;
+    if (M.key !== key) { M.key = key; M.map = binMap(n, i => fOfX(X0 + i, R0, X0, X1)); }
+    const mp = M.map;
+    if (S.hold) {
+      ctx.strokeStyle = 'rgba(232,184,74,.75)'; ctx.lineWidth = 1.2; ctx.beginPath();
+      for (let i = 0; i < n; i++) { const y = yOf(valAt(M.hold, mp, i)); i ? ctx.lineTo(X0 + i, y) : ctx.moveTo(X0 + i, y); }
+      ctx.stroke();
+    }
+    const gr = ctx.createLinearGradient(0, Y0, 0, Y1); gr.addColorStop(0, 'rgba(134,224,162,.55)'); gr.addColorStop(1, 'rgba(134,224,162,.02)');
+    ctx.beginPath(); ctx.moveTo(X0, Y1);
+    const ys = new Float32Array(n);
+    for (let i = 0; i < n; i++) { ys[i] = yOf(valAt(M.dA, mp, i)); ctx.lineTo(X0 + i, ys[i]); }
+    ctx.lineTo(X1, Y1); ctx.closePath(); ctx.fillStyle = gr; ctx.fill();
+    ctx.strokeStyle = '#86e0a2'; ctx.lineWidth = 1.6; ctx.beginPath();
+    for (let i = 0; i < n; i++) i ? ctx.lineTo(X0 + i, ys[i]) : ctx.moveTo(X0, ys[i]);
+    ctx.stroke();
+  } else {
+    const h = M.N / 2;
+    for (const fc of OCT) {
+      const fa = fc * Math.pow(2, -1 / 6), fb = fc * Math.pow(2, 1 / 6);
+      if (fb > nq || fb < R0.fmin || fa > R0.fmax) continue;
+      const ka = Math.max(1, Math.ceil(fa / M.df)), kb = Math.min(h - 1, Math.floor(fb / M.df));
+      let s = 0; for (let k = ka; k <= kb; k++) s += M.pAvg[k];
+      const lv = 10 * Math.log10(s / M.enbw + 1e-30), x0 = xF(Math.max(fa, R0.fmin)) + 1.5, x1 = xF(Math.min(fb, R0.fmax)) - 1.5, y = yOf(lv);
+      ctx.fillStyle = fc > 20000 || fc < 20 ? 'rgba(236,58,140,.6)' : 'rgba(134,224,162,.7)'; ctx.fillRect(x0, y, Math.max(1, x1 - x0), Y1 - y);
+      if (x1 - x0 > 22) { ctx.fillStyle = '#e6e9ec'; ctx.font = "500 12px 'IBM Plex Mono', monospace"; ctx.textAlign = 'center'; ctx.fillText(lv > -rng ? fr(lv, 0) : '', (x0 + x1) / 2, y - 4); }
+    }
+  }
+  /* pic */
+  if (M.peak && M.peak.f >= R0.fmin && M.peak.f <= R0.fmax) {
+    const x = xF(M.peak.f), y = yOf(M.peak.db);
+    ctx.fillStyle = '#e8b84a'; ctx.beginPath(); ctx.moveTo(x, y - 4); ctx.lineTo(x - 7, y - 16); ctx.lineTo(x + 7, y - 16); ctx.fill();
+    ctx.font = "500 16px 'IBM Plex Mono', monospace"; ctx.textAlign = x > X1 - 220 ? 'right' : 'left';
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.95)'; ctx.shadowBlur = 5;
+    ctx.fillText(fr(M.peak.f, M.peak.f < 1000 ? 2 : 1) + ' Hz · ' + fr(M.peak.db, 1) + ' dBFS', x + (x > X1 - 220 ? -10 : 10), Math.max(Y0 + 40, y - 20));
+    ctx.restore();
+  }
+  /* coupure */
+  if (M.cut && M.cut < nq * 0.97 && M.cut >= R0.fmin && M.cut <= R0.fmax) {
+    const x = Math.round(xF(M.cut)) + 0.5; ctx.strokeStyle = 'rgba(91,149,240,.8)'; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(x, Y0 + 50); ctx.lineTo(x, Y1); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#5b95f0'; ctx.textAlign = 'right'; ctx.font = "500 14px 'IBM Plex Mono', monospace"; ctx.fillText('contenu jusqu\'à ' + hz(M.cut), x - 6, Y0 + 62);
+  }
+  /* curseur */
+  if (M.hx != null && M.hx >= X0 && M.hx <= X1) {
+    const f = fOfX(M.hx, R0, X0, X1), k = clamp(Math.round(f / M.df), 1, M.N / 2 - 1), d = M.dA[k];
+    ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.beginPath(); ctx.moveTo(M.hx + 0.5, Y0); ctx.lineTo(M.hx + 0.5, Y1); ctx.stroke();
+    const t = `${hz(f)} · ${fr(d, 1)} dBFS`, bx = M.hx > X1 - 240 ? M.hx - 236 : M.hx + 8;
+    ctx.fillStyle = 'rgba(12,14,16,.9)'; ctx.fillRect(bx, Y1 - 36, 228, 28); ctx.fillStyle = '#e6e9ec'; ctx.textAlign = 'left'; ctx.font = "500 15px 'IBM Plex Mono', monospace"; ctx.fillText(t, bx + 8, Y1 - 17);
+  }
+  ctx.strokeStyle = '#333a42'; ctx.strokeRect(X0 + 0.5, Y0 + 0.5, X1 - X0 - 1, Y1 - Y0 - 1);
+  if (M.freeze) { ctx.font = "600 20px 'Barlow Semi Condensed', sans-serif"; ctx.textAlign = 'left'; ctx.fillStyle = '#f0a35e'; ctx.fillText('❚❚ IMAGE FIGÉE', X0 + 12, Y0 + 44); }
+}
+/* spectrogramme */
+const SGL = (() => {
+  const st = [[0, [8, 9, 11]], [0.2, [29, 37, 96]], [0.4, [59, 95, 208]], [0.58, [69, 194, 176]], [0.72, [134, 224, 162]], [0.84, [232, 184, 74]], [0.94, [236, 58, 140]], [1, [255, 255, 255]]], o = new Uint8ClampedArray(256 * 3);
+  for (let i = 0; i < 256; i++) { const u = i / 255; let j = 0; while (j < st.length - 2 && u > st[j + 1][0]) j++; const [a, ca] = st[j], [b, cb] = st[j + 1], t = clamp((u - a) / (b - a), 0, 1); for (let c = 0; c < 3; c++) o[i * 3 + c] = ca[c] + (cb[c] - ca[c]) * t; }
+  return o;
+})();
+const SG = { off: null, key: '', map: null, col: null };
+const SGP = { X0: 64, X1: 1186, Y0: 8, Y1: 294 };
+function drawSgram(push) {
+  const cv = $('#sgram'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height, { X0, X1, Y0, Y1 } = SGP, pw = X1 - X0, ph = Y1 - Y0, R0 = fRange();
+  if (!SG.off) { SG.off = document.createElement('canvas'); SG.off.width = pw; SG.off.height = ph; const o = SG.off.getContext('2d'); o.fillStyle = '#08090b'; o.fillRect(0, 0, pw, ph); SG.col = o.createImageData(1, ph); }
+  const yF = y => { const u = 1 - y / ph; return R0.log ? R0.fmin * Math.pow(R0.fmax / R0.fmin, u) : R0.fmin + u * (R0.fmax - R0.fmin); };
+  if (push && A.an && !M.freeze) {
+    const key = 's' + M.N + '|' + sr() + '|' + S.xs + '|' + S.xr;
+    if (SG.key !== key) { SG.key = key; SG.map = binMap(ph, i => yF(ph - i)); }
+    const o = SG.off.getContext('2d'); o.drawImage(SG.off, -1, 0);
+    const d = SG.col.data, rng = Math.min(S.dbr, 140);
+    for (let y = 0; y < ph; y++) {
+      const v = valAt(M.dI, SG.map, ph - 1 - y), ci = clamp(Math.round((1 + v / rng) * 255), 0, 255) * 3;
+      d[y * 4] = SGL[ci]; d[y * 4 + 1] = SGL[ci + 1]; d[y * 4 + 2] = SGL[ci + 2]; d[y * 4 + 3] = 255;
+    }
+    o.putImageData(SG.col, pw - 1, 0);
+  }
+  ctx.fillStyle = '#060708'; ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(SG.off, X0, Y0);
+  ctx.font = "500 14px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
+  const ticks = R0.log ? [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000] : [0, 5000, 10000, 15000, 20000, 30000, 40000, 60000, 80000];
+  for (const f of ticks) { if (f < R0.fmin || f > R0.fmax) continue; const u = R0.log ? Math.log(f / R0.fmin) / Math.log(R0.fmax / R0.fmin) : (f - R0.fmin) / (R0.fmax - R0.fmin), y = Y1 - u * ph; ctx.fillStyle = '#a3acb4'; ctx.fillText(fLab(f), X0 - 6, clamp(y + 5, Y0 + 10, Y1)); ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(X0, Math.round(y), 6, 1); }
+  if (R0.fmax >= 20000) { const u = R0.log ? Math.log(20000 / R0.fmin) / Math.log(R0.fmax / R0.fmin) : (20000 - R0.fmin) / (R0.fmax - R0.fmin), y = Math.round(Y1 - u * ph) + 0.5; ctx.strokeStyle = 'rgba(236,58,140,.55)'; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X1, y); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = '#f6a9cc'; ctx.textAlign = 'left'; ctx.fillText('20 kHz', X0 + 8, y - 5); }
+  ctx.textAlign = 'center'; ctx.fillStyle = '#5f6870';
+  for (let s = 0; s <= 20; s += 5) ctx.fillText(s ? '−' + s + ' s' : 'maintenant', X1 - s / 20 * pw - (s ? 0 : 36), H - 8);
+  ctx.strokeStyle = '#333a42'; ctx.strokeRect(X0 + 0.5, Y0 + 0.5, pw - 1, ph - 1);
+}
+/* oscilloscope */
+function drawOsc() {
+  const cv = $('#osc'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height, X0 = 64, X1 = W - 14, Y0 = 10, Y1 = H - 30, r = sr();
+  ctx.fillStyle = '#060708'; ctx.fillRect(0, 0, W, H);
+  let ms = S.tb === 'auto' ? (M.peak && M.peak.f > 5 && M.peak.db > -80 ? clamp(4000 / M.peak.f, 0.5, 100) : 10) : +S.tb;
+  const Wn = Math.min(Math.round(ms / 1000 * r), 32768 - 2000); ms = Wn / r * 1000;
+  const yOf = v => (Y0 + Y1) / 2 - clamp(v, -1.1, 1.1) * (Y1 - Y0) / 2.2;
+  ctx.font = "500 14px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right'; ctx.lineWidth = 1;
+  for (const v of [1, 0.5, 0, -0.5, -1]) { const y = Math.round(yOf(v)) + 0.5; ctx.strokeStyle = v === 0 ? 'rgba(255,255,255,.25)' : Math.abs(v) === 1 ? 'rgba(239,107,107,.45)' : 'rgba(255,255,255,.08)'; ctx.beginPath(); ctx.moveTo(X0, y); ctx.lineTo(X1, y); ctx.stroke(); ctx.fillStyle = '#a3acb4'; ctx.fillText(v ? (v > 0 ? '+' : '−') + fr(Math.abs(v), 1) : '0', X0 - 8, y + 5); }
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= 10; i++) { const x = Math.round(X0 + i / 10 * (X1 - X0)) + 0.5; ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y1); ctx.stroke(); if (i % 2 === 0) { ctx.fillStyle = '#a3acb4'; ctx.fillText(fr(ms * i / 10, ms < 2 ? 2 : ms < 20 ? 1 : 0) + ' ms', clamp(x, X0 + 30, X1 - 30), H - 8); } }
+  if (!A.an) return;
+  const td = M.td, end = 32768 - Wn - 1, lim = Math.max(1, end - Math.round(r * 0.05));
+  let t0 = end;
+  for (let i = end; i > lim; i--) if (td[i - 1] < 0 && td[i] >= 0) { t0 = i; break; }
+  const pw = X1 - X0;
+  ctx.strokeStyle = '#86e0a2'; ctx.lineWidth = 2; ctx.beginPath();
+  if (Wn > pw * 2) {
+    for (let x = 0; x < pw; x++) {
+      const a = t0 + Math.floor(x * Wn / pw), b = t0 + Math.floor((x + 1) * Wn / pw); let mn = 9, mx = -9;
+      for (let i = a; i < b; i++) { const v = td[i]; if (v < mn) mn = v; if (v > mx) mx = v; }
+      ctx.moveTo(X0 + x + 0.5, yOf(mx)); ctx.lineTo(X0 + x + 0.5, yOf(mn) + 0.5);
+    }
+  } else {
+    for (let i = 0; i <= Wn; i++) { const x = X0 + i / Wn * pw, y = yOf(td[t0 + i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+  }
+  ctx.stroke();
+  ctx.fillStyle = '#5f6870'; ctx.textAlign = 'left'; ctx.fillText('mélange (G+D)/2 · déclenchement front montant · ' + (S.tb === 'auto' ? 'base de temps auto' : ms + ' ms'), X0 + 8, Y0 + 18);
+  ctx.strokeStyle = '#333a42'; ctx.strokeRect(X0 + 0.5, Y0 + 0.5, pw - 1, Y1 - Y0 - 1);
+}
+/* crêtemètres */
+function drawMeters(dt) {
+  const cv = $('#meters'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height, Y0 = 56, Y1 = 470, now = performance.now();
+  const yOf = d => Y0 + clamp(-d / 60, 0, 1) * (Y1 - Y0);
+  ctx.fillStyle = '#060708'; ctx.fillRect(0, 0, W, H);
+  ctx.font = "500 15px 'IBM Plex Mono', monospace"; ctx.textAlign = 'right';
+  for (const d of [0, -3, -6, -9, -12, -18, -23, -30, -40, -50, -60]) { const y = Math.round(yOf(d)) + 0.5; ctx.fillStyle = d === -23 ? '#5b95f0' : '#a3acb4'; ctx.fillText(d ? '−' + (-d) : '0', 58, y + 5); ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.beginPath(); ctx.moveTo(64, y); ctx.lineTo(W - 12, y); ctx.stroke(); }
+  for (let c = 0; c < 2; c++) MT.dp[c] = Math.max(-200, MT.dp[c] - 24 * dt);
+  const d = MT.d, bars = [[78, 'G', 0], [178, 'D', 1]];
+  ctx.font = "600 20px 'Barlow Semi Condensed', sans-serif"; ctx.textAlign = 'center';
+  for (const [x, lab, c] of bars) {
+    const w = 84;
+    ctx.fillStyle = '#121518'; ctx.fillRect(x, Y0, w, Y1 - Y0);
+    const pk = MT.dp[c], rms = d ? l2d(d.rms[c]) : -200;
+    const gr = ctx.createLinearGradient(0, Y1, 0, Y0); gr.addColorStop(0, '#45c2b0'); gr.addColorStop(0.62, '#86e0a2'); gr.addColorStop(0.8, '#e8b84a'); gr.addColorStop(0.95, '#ef6b6b');
+    ctx.fillStyle = gr; const yp = yOf(pk); ctx.globalAlpha = 0.45; ctx.fillRect(x, yp, w, Y1 - yp); ctx.globalAlpha = 1;
+    const yr = yOf(rms); ctx.fillRect(x + 18, yr, w - 36, Y1 - yr);
+    const hd = MT.hold[c][0]; if (hd > -60) { ctx.fillStyle = '#e8b84a'; ctx.fillRect(x, yOf(hd) - 1, w, 3); }
+    ctx.fillStyle = now - MT.clip[c] < 2500 ? '#ef6b6b' : '#2a1416'; ctx.fillRect(x, 30, w, 16);
+    ctx.fillStyle = '#e6e9ec'; ctx.fillText(lab, x + w / 2, 22);
+    ctx.font = "500 15px 'IBM Plex Mono', monospace"; ctx.fillStyle = now - MT.clip[c] < 2500 ? '#fff' : '#6b2e2e'; ctx.fillText('CLIP', x + w / 2, 43); ctx.font = "600 20px 'Barlow Semi Condensed', sans-serif";
+  }
+  /* sonie M */
+  const x = 300, w = 84, Mv = d ? d.M : -Infinity, Sv = d ? d.S : -Infinity;
+  ctx.fillStyle = '#121518'; ctx.fillRect(x, Y0, w, Y1 - Y0);
+  if (Number.isFinite(Mv)) { const y = yOf(Mv); ctx.fillStyle = '#5b95f0'; ctx.fillRect(x, y, w, Y1 - y); }
+  if (Number.isFinite(Sv)) { ctx.fillStyle = '#e6e9ec'; ctx.fillRect(x, yOf(Sv) - 1, w, 3); }
+  ctx.strokeStyle = '#5b95f0'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x - 6, yOf(-23) + 0.5); ctx.lineTo(x + w + 6, yOf(-23) + 0.5); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#e6e9ec'; ctx.fillText('M', x + w / 2, 22);
+  ctx.font = "500 13px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#5b95f0'; ctx.fillText('LUFS', x + w / 2, 43); ctx.textAlign = 'left'; ctx.fillText('−23 EBU R128', x + w + 8 > W - 90 ? x - 2 : x + w + 8, yOf(-23) - 6);
+  /* corrélation */
+  const cy = 512, cx0 = 78, cx1 = 384, cr = d && d.corr != null ? clamp(d.corr, -1, 1) : null;
+  ctx.fillStyle = '#121518'; ctx.fillRect(cx0, cy, cx1 - cx0, 16);
+  ctx.fillStyle = 'rgba(255,255,255,.3)'; ctx.fillRect((cx0 + cx1) / 2, cy - 3, 1, 22);
+  if (cr != null) { const xc = cx0 + (cr + 1) / 2 * (cx1 - cx0); ctx.fillStyle = cr < 0 ? '#ef6b6b' : '#86e0a2'; ctx.fillRect(Math.min(xc, (cx0 + cx1) / 2), cy + 2, Math.abs(xc - (cx0 + cx1) / 2) || 2, 12); }
+  ctx.font = "500 14px 'IBM Plex Mono', monospace"; ctx.fillStyle = '#a3acb4'; ctx.textAlign = 'left'; ctx.fillText('−1', cx0, cy + 36); ctx.textAlign = 'center'; ctx.fillText('0', (cx0 + cx1) / 2, cy + 36); ctx.textAlign = 'right'; ctx.fillText('+1', cx1, cy + 36);
+  ctx.textAlign = 'left'; ctx.fillStyle = '#5f6870'; ctx.fillText('corrélation', 392, cy + 13);
+  ctx.textAlign = 'center'; ctx.fillText('dBFS', 36, Y0 - 8);
+}
+function txtMon() {
+  const d = MT.d, pk = M.peak, rd = (id, v) => { const e = $(id); if (e.textContent !== v) e.textContent = v; };
+  rd('#mFreq', pk ? fr(pk.f, pk.f < 1000 ? 2 : 1) + ' Hz' : '—');
+  rd('#mPk', pk ? fr(pk.db, 1) + ' dBFS' : '—');
+  rd('#mCut', M.cut ? (M.cut >= nyq() * 0.97 ? 'fe/2 (' + hz(nyq()) + ')' : '≈ ' + hz(M.cut)) : '—');
+  rd('#mSin', M.sinad != null ? fr(M.sinad, 1) + ' dB · ' + fr((M.sinad - 1.76) / 6.02, 1) + ' bits' : '— (signal non tonal)');
+  if (d) {
+    const p = d.pk.map(l2d), r = d.rms.map(l2d);
+    rd('#mPkLR', dbt(p[0]) + ' / ' + dbt(p[1]));
+    rd('#mRms', dbt(r[0]) + ' / ' + dbt(r[1]));
+    const cf = Math.max(p[0], p[1]) - Math.max(r[0], r[1]);
+    rd('#mCrest', Number.isFinite(cf) ? fr(cf, 1) + ' dB' : '—');
+    rd('#mMS', dbt(d.M) + ' / ' + dbt(d.S));
+    rd('#mI', dbt(d.I) + ' · ' + dbt(d.mx));
+    rd('#mCorr', d.corr != null ? fr(d.corr, 2) : '—');
+  }
+  rd('#o4', A.ctx ? `Moteur ${fr(sr())} Hz · FFT ${fr(M.N)} pts · Δf = ${fr(M.df, M.df < 10 ? 2 : 1)} Hz · fenêtre ${fr(M.N / sr() * 1000, 0)} ms` : 'moteur audio en veille');
+  if (ST.fip && R.cors && R.el) rd('#fCut', M.cut ? (M.cut >= nyq() * 0.97 ? 'fe/2' : '≈ ' + hz(M.cut)) : 'mesure en cours…');
+  else rd('#fCut', ST.fip ? 'non mesurable (CORS)' : '—');
+  if (ST.dig && S.dsrc === 'sweep' && A.ctx) {
+    const t = ((A.ctx.currentTime - D.t0) % D.len + D.len) % D.len;
+    if (t <= SWT) {
+      const f = SWF0 * Math.pow(SWF1 / SWF0, t / SWT), fe = Math.min(S.fs, sr()), out = f < fe / 2 ? f : (S.aa && S.fs < sr() ? null : alias(f, fe));
+      rd('#dSw', hz(f) + ' → ' + (out == null ? 'coupé' : hz(out)));
+    } else rd('#dSw', 'silence');
+  }
+  if (ST.dig && S.dsrc === 'steps' && A.ctx) {
+    const t = ((A.ctx.currentTime - D.t0) % D.len + D.len) % D.len, i = Math.floor(t / STP_T), on = t - i * STP_T < STP_ON;
+    if (i < STEPS.length && on) {
+      const [n, f] = STEPS[i], fe = Math.min(S.fs, sr()), out = f < fe / 2 ? f : (S.aa && S.fs < sr() ? null : alias(f, fe));
+      rd('#dSw', n + ' ' + hz(f) + ' → ' + (out == null ? 'coupé' : hz(out)));
+    } else rd('#dSw', 'silence');
+  }
+}
+
+/* ===================== export du monitoring en page web ===================== */
+function srcInfo() {
+  const qd = QUAL[S.fq], stn = (STATIONS.find(x => x[0] === S.fst) || ['', ''])[1];
+  const dsrc = { music: 'Musique de synthèse (référence)', sine: 'Sinus 1 kHz', sweep: 'Balayage 20 Hz → 20 kHz', steps: 'Séquence de 6 sinus purs : 50 Hz · 125 Hz · 400 Hz · 1 kHz · 3 kHz · 10 kHz', file: D.fileName || 'fichier audio' }[S.dsrc];
+  if (ST.dig) return { name: dsrc, file: S.dsrc === 'file' ? D.fileName : null, rows: [['Bloc', '02 · Numérisation'], ['Source', dsrc], ['Quantification', S.bits + ' bits · ' + fr(Math.pow(2, S.bits)) + ' niveaux' + (S.dither ? ' · dither TPDF' : '')], ['Échantillonnage', fr(S.fs) + ' Hz · Nyquist ' + fr(S.fs / 2) + ' Hz'], ['Filtres', 'anti-repliement ' + (S.aa ? 'activé' : 'coupé') + ' · lissage ' + (S.rec ? 'activé' : 'coupé')], ['Niveau d\'entrée', S.inLvl + ' dB']] };
+  if (ST.gen) { const w = { sine: 'sinus', square: 'carré', triangle: 'triangle', sawtooth: 'dents de scie' }[S.wave]; return { name: 'Générateur ' + hzx(S.f) + ' ' + w, file: null, rows: [['Bloc', '01 · Générateur'], ['Fréquence', hzx(S.f)], ['Forme d\'onde', w], ['Niveau', S.lvl + ' dBFS']] }; }
+  if (ST.fip) return { name: stn + ' ' + qd.codec + ' ' + qd.kbps + ' kbps', file: null, rows: [['Bloc', '03 · Radio FIP'], ['Station', stn], ['Qualité', qd.codec + ' ' + qd.kbps + ' kb/s'], ['Adresse du flux', fipURL(S.fst, S.fq)]] };
+  return { name: 'aucune source', file: null, rows: [['Source', 'aucune source en lecture']] };
+}
+function saveMon() {
+  const note = $('#mSaveN');
+  if (R.quiz) { note.hidden = false; note.className = 'note wa'; note.textContent = 'Terminez d\'abord le quiz : l\'enregistrement révélerait la réponse.'; return; }
+  const now = new Date(), pad = x => String(x).padStart(2, '0');
+  const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}_${pad(now.getHours())}h${pad(now.getMinutes())}`;
+  const si = srcInfo();
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const img = (id, t) => { try { return `<figure><figcaption>${t}</figcaption><img alt="${esc(t)}" src="${$(id).toDataURL('image/png')}"></figure>`; } catch (e) { return ''; } };
+  const meas = [...document.querySelectorAll('#monBay .side .read')].map(r => [r.children[0].textContent, r.children[1].textContent]);
+  const eng = [['Moteur audio', A.ctx ? fr(sr()) + ' Hz' : '—'], ['Analyse', ($('#o4').textContent || '')], ['Moyennage', { fast: 'rapide', mid: 'moyen', slow: 'lent' }[S.avg]], ['Axe', S.xs === 'log' ? 'logarithmique' : 'linéaire'], ['Image figée', M.freeze ? 'oui' : 'non']];
+  const tbl = rows => `<table>${rows.map(([a, b]) => `<tr><th>${esc(a)}</th><td>${esc(b)}</td></tr>`).join('')}</table>`;
+  const title = `Monitoring · ${si.name}`;
+  const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)} · ${stamp}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&family=Barlow+Semi+Condensed:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>:root{color-scheme:dark}body{background:#0c0e10;color:#e6e9ec;font-family:'Barlow Semi Condensed',system-ui,sans-serif;margin:0;padding:18px 22px 40px}
+h1,h2{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:0}h1{font-size:1.6rem}h1 span{color:#e8b84a}h2{font-size:1rem;color:#e8b84a;margin:0 0 8px}
+.sub{color:#8e979f;margin:4px 0 16px;font-family:'IBM Plex Mono',monospace;font-size:.85rem}.src{font-family:'IBM Plex Mono',monospace;color:#ec3a8c}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-bottom:16px}.box{background:#121518;border:1px solid #262c32;border-radius:8px;padding:12px}
+table{border-collapse:collapse;width:100%;font-size:.88rem}th{text-align:left;color:#8e979f;font-weight:400;padding:4px 8px 4px 0;border-bottom:1px dashed #333a42}td{font-family:'IBM Plex Mono',monospace;text-align:right;padding:4px 0;border-bottom:1px dashed #333a42}
+.figs{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:14px}.figs2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+figure{margin:0;background:#121518;border:1px solid #262c32;border-radius:8px;padding:10px}figcaption{font-family:'Barlow Condensed',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#e8b84a;font-size:.85rem;margin-bottom:6px}
+img{display:block;width:100%;height:auto;border-radius:4px;border:1px solid #333a42}
+@media (max-width:900px){.figs,.figs2{grid-template-columns:1fr}}@media print{body{background:#fff;color:#000}}</style></head><body>
+<h1>Atelier d'écoute · monitoring <span>- JC FOUCHE 2026 - www.savoirnumerique.com</span></h1>
+<p class="sub">Source : <span class="src">${esc(si.file || si.name)}</span> · enregistré le ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR')}</p>
+<div class="grid"><div class="box"><h2>Source et réglages</h2>${tbl(si.rows)}</div><div class="box"><h2>Mesures au moment de l'enregistrement</h2>${tbl(meas)}</div><div class="box"><h2>Analyse</h2>${tbl(eng)}</div></div>
+<div class="figs">${img('#spec', 'Analyseur de spectre')}${img('#meters', 'Crêtemètres · sonie · corrélation')}</div>
+<div class="figs2">${img('#sgram', 'Spectrogramme · 20 dernières secondes')}${img('#osc', 'Oscilloscope')}</div>
+${ST.dig ? `<div class="figs2">${img('#dViz', 'Échantillons, nuances et niveaux')}</div>` : ''}
+</body></html>`;
+  const fname = ('monitoring_' + (si.file ? si.file.replace(/\.[^.]+$/, '') : si.name) + '_' + stamp).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w.-]+/g, '_').replace(/_+/g, '_').slice(0, 120) + '.html';
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' }), url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = fname; document.body.appendChild(a); a.click(); a.remove();
+  note.hidden = false; note.className = 'note ok';
+  note.innerHTML = `Page enregistrée : <b class="mono">${esc(fname)}</b>. Si rien n'a été téléchargé (intégration Wix trop restrictive), <a href="${url}" target="_blank" rel="noopener" style="color:var(--amber)">ouvrez-la ici</a> puis enregistrez-la avec Ctrl+S.`;
+  setTimeout(() => URL.revokeObjectURL(url), 10 * 60 * 1000);
+}
+
+/* ===================== boucle ===================== */
+let lastT = performance.now();
+function loop(t) {
+  requestAnimationFrame(loop);
+  const dt = Math.min(0.1, (t - lastT) / 1000); lastT = t;
+  if (document.hidden) return;
+  const ok = analyze(dt);
+  drawSpec(); drawSgram(ok); drawOsc(); drawMeters(dt);
+  if (G.sweep) {
+    S.f = sweepF();
+    if (sweepU() >= 1) stopSweep(true, true); else uiGen();
+  }
+  if (t - M.lastTxt > 150) { M.lastTxt = t; txtMon(); }
+}
+
+/* ===================== icônes (ligne d'horizon à y = 117) ===================== */
+const ICO = '#d4d9de', DARK = '#121518';
+const chev = `<div class="chev" aria-hidden="true"><svg viewBox="0 0 60 30"><path d="M0 5h5l9 10-9 10H0l9-10z" fill="#f7c9de"/><path d="M11 5h5l9 10-9 10h-5l9-10z" fill="#f29cc3"/><path d="M22 5h5l9 10-9 10h-5l9-10z" fill="#ee6aa7"/><path d="M34 2h10l14 13-14 13H34l12-13z" fill="#ec3a8c"/></svg></div>`;
+const icGen = () => `<svg viewBox="0 0 240 128" aria-hidden="true">
+  <rect x="44" y="34" width="128" height="78" rx="6" fill="${ICO}"/><rect x="52" y="42" width="72" height="44" rx="2" fill="#060708"/>
+  <path d="M56 64 Q63 46 70 64 T84 64 T98 64 T112 64 T120 64" fill="none" stroke="#86e0a2" stroke-width="2.2"/>
+  <circle cx="146" cy="56" r="11" fill="${DARK}"/><line x1="146" y1="56" x2="152" y2="48" stroke="${ICO}" stroke-width="2.5"/>
+  <circle cx="140" cy="94" r="5" fill="${DARK}"/><circle cx="158" cy="94" r="5" fill="${DARK}"/><rect x="54" y="92" width="44" height="6" rx="2" fill="${DARK}"/>
+  <rect x="50" y="112" width="12" height="5" fill="${ICO}"/><rect x="154" y="112" width="12" height="5" fill="${ICO}"/>
+  <path d="M172 70 C196 70 190 100 214 100" fill="none" stroke="${ICO}" stroke-width="3"/><rect x="212" y="94" width="14" height="12" rx="2" fill="${ICO}"/></svg>`;
+const icDig = () => `<svg viewBox="0 0 240 128" aria-hidden="true">
+  <rect x="34" y="18" width="22" height="40" rx="11" fill="${ICO}"/><path d="M38 30h14M38 38h14M38 46h14" stroke="${DARK}" stroke-width="2"/>
+  <path d="M28 46 Q28 68 45 68 Q62 68 62 46" fill="none" stroke="${ICO}" stroke-width="3"/><line x1="45" y1="68" x2="45" y2="104" stroke="${ICO}" stroke-width="4"/>
+  <path d="M45 104 L30 117 M45 104 L60 117 M45 104 V117" stroke="${ICO}" stroke-width="4" stroke-linecap="round"/>
+  <path d="M68 50 h22" stroke="#ec3a8c" stroke-width="2" stroke-dasharray="3 3"/>
+  <rect x="96" y="22" width="120" height="76" rx="6" fill="${ICO}"/><rect x="104" y="30" width="104" height="52" rx="2" fill="#060708"/>
+  <path d="M108 56 Q122 30 136 56 T164 56 T192 56 T204 56" fill="none" stroke="#5f6870" stroke-width="1.5"/>
+  <path d="M108 56 h7 v-12 h7 v-8 h7 v8 h7 v12 h7 v12 h7 v8 h7 v-8 h7 v-12 h7 v-12 h7 v-8 h7 v8 h7 v12 h7" fill="none" stroke="#e8b84a" stroke-width="2"/>
+  <text x="156" y="94" text-anchor="middle" fill="${DARK}" style="font-family:var(--f-mono);font-size:10px;font-weight:500">0110 1011</text>
+  <path d="M108 98 v6 M124 98 v6 M140 98 v6 M156 98 v6 M172 98 v6 M188 98 v6 M204 98 v6" stroke="${ICO}" stroke-width="3"/>
+  <rect x="100" y="104" width="112" height="13" rx="2" fill="${ICO}"/></svg>`;
+const icFip = () => `<svg viewBox="0 0 240 128" aria-hidden="true">
+  <line x1="150" y1="44" x2="196" y2="6" stroke="${ICO}" stroke-width="3" stroke-linecap="round"/><circle cx="196" cy="6" r="3.5" fill="${ICO}"/>
+  <path d="M206 18 q8 8 0 16 M214 12 q14 14 0 28" fill="none" stroke="#ec3a8c" stroke-width="2.2" stroke-linecap="round"/>
+  <rect x="50" y="44" width="140" height="68" rx="9" fill="${ICO}"/>
+  <circle cx="86" cy="78" r="23" fill="${DARK}"/><circle cx="86" cy="78" r="15" fill="none" stroke="${ICO}" stroke-width="1.5" stroke-dasharray="2 3"/><circle cx="86" cy="78" r="5" fill="${ICO}"/>
+  <rect x="118" y="56" width="60" height="24" rx="3" fill="#060708"/><text x="148" y="74" text-anchor="middle" fill="#ec3a8c" style="font-family:var(--f-disp);font-weight:600;font-size:17px;letter-spacing:2px">FIP</text>
+  <circle cx="130" cy="96" r="6" fill="${DARK}"/><circle cx="166" cy="96" r="6" fill="${DARK}"/><rect x="141" y="94" width="14" height="4" rx="2" fill="${DARK}"/>
+  <rect x="60" y="112" width="14" height="5" fill="${ICO}"/><rect x="166" y="112" width="14" height="5" fill="${ICO}"/></svg>`;
+const icMon = `<svg viewBox="0 0 80 50"><path d="M6 18h10l14-12v38L16 32H6z" fill="${ICO}"/><path d="M36 15q7 10 0 20M42 9q12 16 0 32" fill="none" stroke="#ec3a8c" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M58 12 q14 0 14 14 q0 8 -7 11 q-3 2 -3 6 q0 5 -5 5" fill="none" stroke="${ICO}" stroke-width="3" stroke-linecap="round"/><path d="M60 22 q6 0 6 6" fill="none" stroke="${ICO}" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+
+/* ===================== commandes ===================== */
+function syncSeg() {
+  document.querySelectorAll('[data-k]').forEach(c => { for (const b of c.querySelectorAll('button[data-v]')) b.setAttribute('aria-pressed', String(String(S[c.dataset.k]) === b.dataset.v)); });
+  $('#mHold').checked = S.hold;
+  $('#mFreeze').classList.toggle('on', M.freeze);
+}
+function uiEngine() {
+  const r = A.ctx ? A.ctx.sampleRate : null;
+  $('#engV').textContent = r ? `${fr(r)} Hz · fe/2 = ${fr(r / 2)} Hz${A.native && S.rate !== 'auto' ? ' · sortie ' + fr(A.native) : ''}${A.wk ? '' : ' · mode compatible'}` : '—';
+  $('#rateS').value = S.rate;
+  $('#mstR').value = S.master; $('#mstV').textContent = S.master + ' dB';
+}
+function uiAll() { uiEngine(); uiGen(); uiDig(); uiFip(); syncSeg(); }
+function onSet(k) {
+  if (k === 'f') { setF(S.f); }
+  else if (k === 'wave') { genApply(); uiGen(); }
+  else if (k === 'step') uiGen();
+  else if (k === 'dsrc') { D.err = null; if (ST.dig || S.dsrc === 'file') digStart(); else uiDig(); }
+  else if (['bits', 'fs'].includes(k)) { digApply(); uiDig(); }
+  else if (k === 'fq') { if (R.quiz) { R.quiz = null; $('#monBay').classList.remove('blind'); $('#qAns').hidden = true; } if (ST.fip) fipStart(); else uiFip(); }
+  else if (k === 'fft') { M.pAvg = null; }
+  else if (k === 'xs' || k === 'xr') { M.key = ''; SG.key = ''; }
+  syncSeg();
+}
+function bindRange(id, key, from, after) {
+  const el = $(id);
+  el.addEventListener('input', () => { S[key] = from ? from(+el.value) : +el.value; after(); });
+}
+let FSP = false;
+function init() {
+  $('#ic1').innerHTML = icGen() + chev; $('#ic2').innerHTML = icDig() + chev; $('#ic3').innerHTML = icFip(); $('#ic4').innerHTML = icMon;
+  $('#gChips').innerHTML = GCHIPS.map(f => `<button type="button" data-v="${f}">${f >= 1000 ? fr(f / 1000) + ' k' : f}</button>`).join('');
+  $('#dFsC').innerHTML = FSL.map(f => `<button type="button" data-v="${f}">${khz(f)} k</button>`).join('');
+  $('#fQ').innerHTML = QUAL.map((q, i) => `<button type="button" data-v="${i}">${q.n}</button>`).join('');
+  $('#fSt').innerHTML = STATIONS.map(([v, n]) => `<option value="${v}">${n}</option>`).join('');
+  document.querySelectorAll('[data-k]').forEach(c => c.addEventListener('click', e => {
+    const b = e.target.closest('button[data-v]'); if (!b) return;
+    const k = c.dataset.k; S[k] = c.dataset.num ? +b.dataset.v : b.dataset.v; onSet(k);
+  }));
+  /* générateur */
+  $('#gPlay').addEventListener('click', () => ST.gen ? genStop() : genStart());
+  bindRange('#gR', 'f', p => { const f = gFreq(p); return f < 10 ? Math.round(f * 10) / 10 : f < 1000 ? Math.round(f) : Math.round(f / 10) * 10; }, () => setF(S.f));
+  $('#gN').addEventListener('change', e => { const v = parseFloat(String(e.target.value).replace(',', '.')); if (Number.isFinite(v)) setF(v); });
+  $('#gN').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
+  $('#gDn').addEventListener('click', () => stepF(-1)); $('#gUp').addEventListener('click', () => stepF(1));
+  bindRange('#gL', 'lvl', null, () => { genLevel(); uiGen(); });
+  $('#tHi').addEventListener('click', () => startSweep(1)); $('#tLo').addEventListener('click', () => startSweep(-1));
+  $('#tStop').addEventListener('click', () => stopSweep(true, false));
+  /* numérisation */
+  $('#dPlay').addEventListener('click', () => ST.dig ? digStop() : digStart());
+  $('#dFileB').addEventListener('click', () => $('#dFile').click());
+  $('#dFile').addEventListener('change', async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    D.fileData = await f.arrayBuffer(); D.fileName = f.name;
+    for (const k in D.bufs) if (k.startsWith('file@')) delete D.bufs[k];
+    S.dsrc = 'file'; D.err = null; syncSeg(); digStart();
+  });
+  bindRange('#dB', 'bits', null, () => { digApply(); uiDig(); syncSeg(); });
+  bindRange('#dIn', 'inLvl', null, () => { digApply(); uiDig(); });
+  bindRange('#dF', 'fs', dFreq, () => { digApply(); uiDig(); syncSeg(); });
+  $('#dDit').addEventListener('change', e => { S.dither = e.target.checked; digApply(); uiDig(); });
+  $('#dAA').addEventListener('change', e => { S.aa = e.target.checked; digApply(); uiDig(); });
+  $('#dRec').addEventListener('change', e => { S.rec = e.target.checked; digApply(); uiDig(); });
+  /* FIP */
+  $('#fPlay').addEventListener('click', () => ST.fip ? fipStop() : fipStart());
+  $('#fSt').addEventListener('change', e => { S.fst = e.target.value; if (ST.fip) fipStart(); else uiFip(); });
+  bindRange('#fV', 'fvol', null, () => { fipVol(); uiFip(); });
+  $('#qGo').addEventListener('click', quizStart);
+  $('#qAns').addEventListener('click', e => { const b = e.target.closest('button[data-a]'); if (b) quizAnswer(+b.dataset.a); });
+  /* moteur */
+  $('#rateS').addEventListener('change', async e => { S.rate = e.target.value; await buildAudio(); });
+  bindRange('#mstR', 'master', null, () => { if (A.master) A.master.gain.setTargetAtTime(dbg(S.master), A.ctx.currentTime, 0.02); fipVol(); uiEngine(); });
+  $('#stopAll').addEventListener('click', () => { if (G.sweep) G.sweep = null; stopAll(); });
+  /* monitoring */
+  $('#mHold').addEventListener('change', e => { S.hold = e.target.checked; if (M.hold) M.hold.fill(-200); });
+  $('#mFreeze').addEventListener('click', () => { M.freeze = !M.freeze; syncSeg(); });
+  $('#mSave').addEventListener('click', saveMon);
+  $('#mReset').addEventListener('click', () => { if (A.meterCmd) A.meterCmd({ reset: 1 }); MT.reset(); });
+  const sp = $('#spec');
+  sp.addEventListener('mousemove', e => { const r = sp.getBoundingClientRect(); M.hx = (e.clientX - r.left) / r.width * sp.width; });
+  sp.addEventListener('mouseleave', () => { M.hx = null; });
+  /* démos */
+  $('#dmHigh').addEventListener('click', () => startSweep(1));
+  $('#dmAlias').addEventListener('click', () => { Object.assign(S, { dsrc: 'sweep', fs: 8000, aa: false, rec: true, bits: 16, dither: false, inLvl: 0 }); syncSeg(); digStart(); });
+  $('#dmBits').addEventListener('click', () => { Object.assign(S, { dsrc: 'music', fs: 44100, aa: true, rec: true, bits: 4, dither: false, inLvl: 0 }); syncSeg(); digStart(); });
+  $('#dmFip').addEventListener('click', () => { S.fq = 0; R.quiz = null; $('#monBay').classList.remove('blind'); $('#qAns').hidden = true; syncSeg(); fipStart(); });
+  /* plein écran */
+  const fsBtn = (b, el) => b.addEventListener('click', () => {
+    if (document.fullscreenElement) { document.exitFullscreen().catch(() => { }); return; }
+    if (!el.requestFullscreen) { b.textContent = 'Utilisez la touche F11'; setTimeout(syncFS, 3000); return; }
+    el.requestFullscreen().catch(() => { b.textContent = 'Plein écran bloqué ici'; setTimeout(syncFS, 3000); });
+  });
+  fsBtn($('#pageFS'), document.documentElement); fsBtn($('#monFS'), $('#monBay'));
+  document.addEventListener('fullscreenchange', syncFS);
+  document.addEventListener('keydown', e => { if (e.key === ' ' && e.target === document.body) { e.preventDefault(); stopAll(); } });
+  $('#gL').value = S.lvl; $('#mstR').value = S.master;
+  uiAll();
+  buildAudio();
+  requestAnimationFrame(loop);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawDig());
+}
+function syncFS() {
+  const fe = document.fullscreenElement;
+  $('#pageFS').textContent = fe === document.documentElement ? '✕ Quitter le plein écran' : '⛶ Plein écran';
+  $('#monFS').textContent = fe === $('#monBay') ? '✕ Quitter le plein écran' : '⛶ Plein écran';
+}
+init();
+</script>
+</body></html>
